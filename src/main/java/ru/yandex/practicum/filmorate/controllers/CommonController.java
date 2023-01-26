@@ -19,9 +19,9 @@ public abstract class CommonController<T extends Item> {
     }
 
     @GetMapping
-    public List<T> findAll() {
+    public Collection<T> findAll() {
         log.info(String.valueOf(LogMessages.COUNT), itemsMap.size());
-        return Collections.unmodifiableList(new ArrayList<>(itemsMap.values()));
+        return Collections.unmodifiableCollection(itemsMap.values());
     }
 
     @PostMapping
