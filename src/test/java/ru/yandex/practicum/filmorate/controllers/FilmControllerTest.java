@@ -79,7 +79,7 @@ class FilmControllerTest  extends FilmController {
                 .build();
         filmController.create(film1);
         film2.setId(99);
-        ValidationException ex = assertThrows(ValidationException.class, () -> filmController.put(film2));
-        assertEquals("Такого фильма не существует", ex.getMessage());
+        javax.validation.ValidationException ex = assertThrows(javax.validation.ValidationException.class, () -> filmController.put(film2));
+        assertEquals("Такого объекта не существует", ex.getMessage());
     }
 }
