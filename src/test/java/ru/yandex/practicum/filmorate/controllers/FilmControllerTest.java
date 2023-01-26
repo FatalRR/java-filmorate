@@ -5,6 +5,8 @@ import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,7 +62,9 @@ class FilmControllerTest  extends FilmController {
         filmController.create(film1);
         film2.setId(film1.getId());
         filmController.put(film2);
-        assertEquals(List.of(film2), filmController.findAll());
+        Collection<Film> actualFilms = filmController.findAll();
+        assertEquals(1, actualFilms.size());
+        assertEquals(film2, actualFilms.iterator().next());
     }
 
     @Test
