@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class User implements Item {
+public class User extends Entity {
     private int id;
     @Email(message = "Некорректный email адрес")
     private String email;

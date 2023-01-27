@@ -1,6 +1,6 @@
-package ru.yandex.practicum.filmorate.controllers;
+package ru.yandex.practicum.filmorate.messages;
 
-enum LogMessages {
+public enum LogMessages {
     ADD("Объект успешно добавлен: {}"),
     UPDATE("Объект успешно обновлен: {}"),
     TRY_ADD("Попытка добавить: {}"),

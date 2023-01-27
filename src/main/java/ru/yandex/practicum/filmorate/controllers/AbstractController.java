@@ -2,15 +2,19 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.model.Item;
+import ru.yandex.practicum.filmorate.messages.LogMessages;
+import ru.yandex.practicum.filmorate.model.Entity;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
-public abstract class CommonController<T extends Item> {
+public abstract class AbstractController<T extends Entity> {
     private int id = 1;
     private final Map<Integer, T> itemsMap = new HashMap<>();
 
