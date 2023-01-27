@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Entity;
 
-import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@RestController
 public abstract class AbstractController<T extends Entity> {
     private int id = 1;
     private final Map<Integer, T> itemsMap = new HashMap<>();
@@ -22,14 +20,13 @@ public abstract class AbstractController<T extends Entity> {
         return id++;
     }
 
-    @GetMapping
     public Collection<T> findAll() {
         log.info(String.valueOf(LogMessages.COUNT), itemsMap.size());
         return Collections.unmodifiableCollection(itemsMap.values());
     }
 
-    @PostMapping
-    public T create(@Valid @RequestBody T t) throws ValidationException {
+
+    public T create(T t) throws ValidationException {
         log.debug(String.valueOf(LogMessages.TRY_ADD), t);
         validate(t);
 
@@ -39,8 +36,7 @@ public abstract class AbstractController<T extends Entity> {
         return t;
     }
 
-    @PutMapping
-    public T put(@Valid @RequestBody T t) throws ValidationException {
+    public T put(T t) throws ValidationException {
         log.debug(String.valueOf(LogMessages.TRY_UPDATE), t);
         validate(t);
 

@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import javax.validation.constraints.*;
 import lombok.*;
+import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 
 import java.time.LocalDate;
 
@@ -10,12 +11,12 @@ import java.time.LocalDate;
 @Builder
 public class User extends Entity {
     private int id;
-    @Email(message = "Некорректный email адрес")
+    @Email(message = ExceptionMessages.INCORRECT_EMAIL)
     private String email;
-    @NotBlank(message = "login не может быть пустой")
-    @Pattern(regexp = ".*\\S.", message = "login не должен содержать пробелы")
+    @NotBlank(message = ExceptionMessages.EMPTY_LOGIN)
+    @Pattern(regexp = ".*\\S.", message = ExceptionMessages.LOGIN_WITHOUT_SPACE)
     private String login;
     private String name;
-    @PastOrPresent(message = "Дата рождения не может быть в будущем")
+    @PastOrPresent(message = ExceptionMessages.INCORRECT_BIRTHDAY)
     private LocalDate birthday;
 }
