@@ -30,7 +30,7 @@ public abstract class AbstractController<T extends Entity> {
         validate(t);
 
         t.setId(generatorId());
-        itemsMap.put(t.getId(),t);
+        itemsMap.put(t.getId(), t);
         log.debug(String.valueOf(LogMessages.ADD), t);
         return t;
     }

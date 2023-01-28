@@ -18,15 +18,16 @@ public class UserController extends AbstractController<User> {
     public Collection<User> findAll() {
         return super.findAll();
     }
+
     @PostMapping
     @Override
-    public User create(@Valid @RequestBody User user) throws javax.validation.ValidationException {
+    public User create(@Valid @RequestBody User user) throws ValidationException {
         return super.create(user);
     }
 
     @PutMapping
     @Override
-    public User put(@Valid @RequestBody User user) throws javax.validation.ValidationException {
+    public User put(@Valid @RequestBody User user) throws ValidationException {
         return super.put(user);
     }
 
