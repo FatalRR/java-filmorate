@@ -6,10 +6,16 @@ import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Film extends Entity {
+public class Film {
     private int id;
     @NotBlank(message = ExceptionMessages.EMPTY_NAME)
     private String name;
@@ -18,4 +24,5 @@ public class Film extends Entity {
     private LocalDate releaseDate;
     @PositiveOrZero(message = ExceptionMessages.POSITIVE_DURATION)
     private long duration;
+    private Set<Integer> likes = new HashSet<>();
 }

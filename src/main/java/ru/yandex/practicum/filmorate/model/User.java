@@ -6,10 +6,16 @@ import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
-@Data
+@Getter
+@Setter
+@ToString(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class User extends Entity {
+public class User {
     private int id;
     @Email(message = ExceptionMessages.INCORRECT_EMAIL)
     private String email;
@@ -19,4 +25,5 @@ public class User extends Entity {
     private String name;
     @PastOrPresent(message = ExceptionMessages.INCORRECT_BIRTHDAY)
     private LocalDate birthday;
+    private Set<Integer> friends = new HashSet<>();
 }

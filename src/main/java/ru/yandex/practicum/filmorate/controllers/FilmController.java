@@ -1,41 +1,55 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.excepions.ValidationException;
-import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
-import java.time.LocalDate;
-import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
-public class FilmController extends AbstractController<Film> {
-    private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
+public class FilmController {
+    private final FilmService filmService;
+
+    @Autowired
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
+    }
 
     @GetMapping
-    @Override
-    public Collection<Film> findAll() {
-        return super.findAll();
+    public List<Film> getAll() {
+        return filmService.getAll();
     }
 
     @PostMapping
-    @Override
-    public Film create(@Valid @RequestBody Film film) throws ValidationException {
-        return super.create(film);
+    public Film save(@Valid @RequestBody Film film) {
+        return filmService.save(film);
     }
 
     @PutMapping
-    @Override
-    public Film put(@Valid @RequestBody Film film) throws ValidationException {
-        return super.put(film);
+    public Film update(@Valid @RequestBody Film film) {
+        return filmService.update(film);
     }
 
-    public Film validate(Film film) throws ValidationException {
-        if (film.getReleaseDate().isBefore(BOUNDARY_DATE)) {
-            throw new ValidationException(ValidationExceptionMessages.RELEASE_DATE.toString());
-        }
-        return film;
+    @GetMapping("/{filmId}")
+    public Film getById(@PathVariable int filmId) {
+        return filmService.getById(filmId);
+    }
+
+    @PutMapping("/{filmId}/like/{userId}")
+    public Film addLike(@PathVariable int filmId, @PathVariable int userId) {
+        return filmService.addLike(filmId, userId);
+    }
+
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public Film removeLike(@PathVariable int filmId, @PathVariable int userId) {
+        return filmService.removeLike(filmId, userId);
+    }
+
+    @GetMapping("/popular")
+    public List<Film> getPopular(@RequestParam(defaultValue = "10", required = false) Integer count) {
+        return filmService.getPopular(count);
     }
 }
