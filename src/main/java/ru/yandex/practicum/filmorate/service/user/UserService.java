@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +18,14 @@ public class UserService {
 
     public UserService(UserStorage userStorage) {
         this.userStorage = userStorage;
+    }
+
+    private User validate(User user) throws ValidationException {
+        if (user.getName() == null || user.getName().isBlank()) {
+            log.info(ValidationExceptionMessages.LOGIN_TO_NAME.toString());
+            user.setName(user.getLogin());
+        }
+        return user;
     }
 
     public List<User> getAll() {
@@ -77,22 +84,13 @@ public class UserService {
     public List<User> corporateFriends(int userId, int friendId) {
         User user = userStorage.getById(userId);
         User friend = userStorage.getById(friendId);
-        List<User> mutualFriends = new ArrayList<>();
-        for (Integer id : user.getFriends()) {
-            if (friend.getFriends().contains(id)) {
-                User mutualFriend = userStorage.getById((id));
-                mutualFriends.add(mutualFriend);
-            }
-        }
+
+        List<User> mutualFriends = user.getFriends().stream()
+                .filter(friend.getFriends()::contains)
+                .map(userStorage::getById)
+                .collect(Collectors.toList());
+
         log.info(String.valueOf(LogMessages.LIST_OF_FRIENDS));
         return mutualFriends;
-    }
-
-    public User validate(User user) throws ValidationException {
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.info(ValidationExceptionMessages.LOGIN_TO_NAME.toString());
-            user.setName(user.getLogin());
-        }
-        return user;
     }
 }
