@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.storage.InMemoryStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,55 +14,29 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class InMemoryFilmStorage implements FilmStorage {
-    private final Map<Integer, Film> films = new HashMap<>();
-    private int id = 1;
-
-    private int generateId() {
-        return id++;
-    }
-
+public class InMemoryFilmStorage extends InMemoryStorage<Film> implements FilmStorage {
     @Override
     public List<Film> getAll() {
-        log.info(String.valueOf(LogMessages.COUNT), films.size());
-        return new ArrayList<>(films.values());
+        return super.getAll();
     }
 
     @Override
     public Film save(Film film) {
-        log.info(String.valueOf(LogMessages.TRY_ADD), film);
-        film.setId(generateId());
-        films.put(film.getId(), film);
-        log.info(String.valueOf(LogMessages.ADD));
-        return film;
+        return super.save(film);
     }
 
     @Override
     public Film update(Film film) {
-        log.info(String.valueOf(LogMessages.TRY_UPDATE), film);
-        if (!films.containsKey(film.getId())) {
-            throw new NotFoundException(String.valueOf(LogMessages.MISSING));
-        }
-        films.replace(film.getId(), film);
-        log.info(String.valueOf(LogMessages.UPDATE));
-        return film;
+        return super.update(film);
     }
 
     @Override
     public Film getById(int id) {
-        if (films.containsKey(id)) {
-            return films.get(id);
-        } else {
-            throw new NotFoundException(String.valueOf(LogMessages.MISSING));
-        }
+        return super.getById(id);
     }
 
     @Override
     public Film remove(Film film) {
-        if (films.containsKey(id)) {
-            return films.remove(id);
-        } else {
-            throw new NotFoundException(String.valueOf(LogMessages.MISSING));
-        }
+        return super.remove(film);
     }
 }
