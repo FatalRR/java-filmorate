@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Film {
+public class Film extends  Entity {
     private int id;
     @NotBlank(message = ExceptionMessages.EMPTY_NAME)
     private String name;
@@ -24,5 +25,6 @@ public class Film {
     private LocalDate releaseDate;
     @PositiveOrZero(message = ExceptionMessages.POSITIVE_DURATION)
     private long duration;
-    private Set<Integer> likes = new HashSet<>();
+    @JsonIgnore
+    private final Set<Integer> likes = new HashSet<>();
 }
