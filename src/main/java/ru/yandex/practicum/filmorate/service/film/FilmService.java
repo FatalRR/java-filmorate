@@ -10,6 +10,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,17 @@ import java.util.stream.Collectors;
 public class FilmService {
     private final FilmStorage filmStorage;
     private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
+    private static final Comparator<Film> LIKES_COMPARATOR = (o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size());
 
     public FilmService(FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
+    }
+
+    private Film validate(Film film) {
+        if (film.getReleaseDate().isBefore(BOUNDARY_DATE)) {
+            throw new ValidationException(ValidationExceptionMessages.RELEASE_DATE.toString());
+        }
+        return film;
     }
 
     public List<Film> getAll() {
@@ -63,15 +72,8 @@ public class FilmService {
 
     public List<Film> getPopular(int count) {
         return filmStorage.getAll().stream()
-                .sorted((o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size()))
+                .sorted(LIKES_COMPARATOR)
                 .limit(count)
                 .collect(Collectors.toList());
-    }
-
-    public Film validate(Film film) {
-        if (film.getReleaseDate().isBefore(BOUNDARY_DATE)) {
-            throw new ValidationException(ValidationExceptionMessages.RELEASE_DATE.toString());
-        }
-        return film;
     }
 }
