@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.model;
 
 import javax.validation.constraints.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User extends Entity{
     private int id;
     @Email(message = ExceptionMessages.INCORRECT_EMAIL)
     private String email;
@@ -25,5 +26,6 @@ public class User {
     private String name;
     @PastOrPresent(message = ExceptionMessages.INCORRECT_BIRTHDAY)
     private LocalDate birthday;
-    private Set<Integer> friends = new HashSet<>();
+    @JsonIgnore
+    private final Set<Integer> friends = new HashSet<>();
 }
