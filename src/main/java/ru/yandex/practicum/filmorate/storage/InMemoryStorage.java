@@ -60,4 +60,8 @@ public abstract class InMemoryStorage<T extends Entity> {
             throw new NotFoundException(String.valueOf(LogMessages.MISSING));
         }
     }
+
+    public void clearAll() {
+        storage.clear();
+    }
 }
