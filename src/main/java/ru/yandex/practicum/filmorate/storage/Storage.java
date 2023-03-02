@@ -12,4 +12,5 @@ public interface Storage<T> {
     T getById(int id);
 
     T remove(T t);
+    void clearAll();
 }
