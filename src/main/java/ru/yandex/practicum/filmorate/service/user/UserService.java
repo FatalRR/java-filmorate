@@ -21,6 +21,10 @@ public class UserService extends AbstractService<User> {
         super.storage = storage;
     }
 
+    private boolean checkFriendToFriend(int userId, int friendId) {
+        return userId == friendId;
+    }
+
     @Override
     public User validate(User user) throws ValidationException {
         if (user.getName() == null || user.getName().isBlank()) {
@@ -31,7 +35,7 @@ public class UserService extends AbstractService<User> {
     }
 
     public User addFriend(int userId, int friendId) {
-        if (userId == friendId)
+        if (checkFriendToFriend(userId, friendId))
             throw new ValidationException(String.valueOf(ValidationExceptionMessages.FRIEND_TO_FRIEND));
         getById(userId);
         getById(friendId);
@@ -42,7 +46,7 @@ public class UserService extends AbstractService<User> {
     }
 
     public User removeFriend(int userId, int friendId) {
-        if (userId == friendId)
+        if (checkFriendToFriend(userId, friendId))
             throw new ValidationException(String.valueOf(ValidationExceptionMessages.FRIEND_TO_FRIEND));
         getById(userId);
         getById(friendId);
