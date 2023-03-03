@@ -57,8 +57,4 @@ public abstract class InMemoryStorage<T extends Entity> {
     public void clearAll() {
         storage.clear();
     }
-
-    public void clearAll() {
-        storage.clear();
-    }
 }
