@@ -1,14 +1,29 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserControllerTest extends UserController {
-    UserController userController = new UserController();
+@SpringBootTest
+class UserControllerTest  {
+    @Autowired
+    UserController userController;
+
+    @Autowired
+    Storage<User> storage;
+
+    @AfterEach
+    public void clearUp() {
+        storage.clearAll();
+    }
 
     @Test
     void shouldGetAllUsers() {
@@ -24,9 +39,9 @@ class UserControllerTest extends UserController {
                 .login("testLogin1")
                 .birthday(LocalDate.of(2022, 2, 2))
                 .build();
-        userController.create(user1);
-        userController.create(user2);
-        assertEquals(2, userController.findAll().size());
+        userController.save(user1);
+        userController.save(user2);
+        assertEquals(2, userController.getAll().size());
     }
 
     @Test
@@ -36,7 +51,7 @@ class UserControllerTest extends UserController {
                 .login("testLogin1")
                 .birthday(LocalDate.of(2020, 1, 1))
                 .build();
-        userController.create(user);
+        userController.save(user);
         assertEquals("testLogin1",user.getName());
     }
 }
