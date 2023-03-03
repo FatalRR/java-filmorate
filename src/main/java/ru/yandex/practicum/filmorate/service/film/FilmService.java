@@ -19,13 +19,12 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class FilmService extends AbstractService<Film> {
+    private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
+    private static final Comparator<Film> LIKES_COMPARATOR = (o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size());
     @Autowired
     public FilmService(Storage<Film> storage) {
         super.storage = storage;
     }
-
-    private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
-    private static final Comparator<Film> LIKES_COMPARATOR = (o1, o2) -> Integer.compare(o2.getLikes().size(), o1.getLikes().size());
 
     @Override
     public Film validate(Film film) {
