@@ -9,4 +9,9 @@ public enum ExceptionMessages {
     public static final String EMPTY_LOGIN = "login не может быть пустой";
     public static final String INCORRECT_BIRTHDAY = "Дата рождения не может быть в будущем";
     public static final String LOGIN_WITHOUT_SPACE = "login не должен содержать пробелы";
+    public static final String POSITIVE_ID = "id должен быть больше 0";
+    public static final String NOT_GENRE = "Жанр не найден";
+    public static final String NOT_MPA = "Рейтинг не найден";
+    public static final String NOT_FOUND_ID = "Не найден объект по ID";
+    public static final String NOT_OBJECT = "Не найден объект";
 }

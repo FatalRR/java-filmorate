@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.messages;
 public enum LogMessages {
     ADD("Объект успешно добавлен: {}"),
     UPDATE("Объект успешно обновлен: {}"),
+    GET("Объект получен по id: {}"),
     TRY_ADD("Попытка добавить: {}"),
     TRY_UPDATE("Попытка обновить: {}"),
     TRY_GET_POPULAR("Попытка получить популярный объект: {}"),
