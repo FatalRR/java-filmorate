@@ -1,7 +1,7 @@
 # java-filmorate
 
 ERD: https://app.quickdatabasediagrams.com/#/d/S0dVKo
-![2023-03-05_18-55-00](https://user-images.githubusercontent.com/113539431/222958929-7cfa159d-447b-43a4-b66a-663a1f4b2268.png)
+![image](https://user-images.githubusercontent.com/113539431/226466231-9975eb00-c091-417e-8a0d-c1b1f5d041d8.png)
 
 ###### Таблица film
 - ***id*** - уникальный индентифиатор фильма  
