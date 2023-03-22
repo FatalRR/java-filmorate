@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FilmDbStorageTest {
     private final FilmDbStorage filmDbStorage;
     private final UserDbStorage userDbStorage;
+    private final LikeDbStorage likeDbStorage;
 
     @Test
     void shouldSave() {
@@ -116,7 +117,7 @@ class FilmDbStorageTest {
         film.addFilmGenre(genre);
         Film saveFilm = filmDbStorage.save(film);
         User likeUser = userDbStorage.save(user);
-        filmDbStorage.addLike(saveFilm.getId(), likeUser.getId());
+        likeDbStorage.addLike(saveFilm.getId(), likeUser.getId());
 
         List<Film> listFilm = filmDbStorage.getPopular(1);
         assertEquals(listFilm.get(0).getName(), saveFilm.getName());
