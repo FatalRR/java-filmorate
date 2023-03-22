@@ -6,8 +6,7 @@ import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -29,7 +28,7 @@ public class Film extends Entity {
     private int rate;
     @NotNull
     private Mpa mpa;
-    private final List<Genre> genres = new ArrayList<>();
+    private final Set<Genre> genres = new TreeSet<>(Comparator.comparingInt(Genre::getId));
 
     public void addFilmGenre(Genre genre) {
         genres.add(genre);
