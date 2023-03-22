@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.dao;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -41,7 +42,7 @@ class FilmDbStorageTest {
         Film saveFilm = filmDbStorage.save(film);
         assertEquals(saveFilm.getName(), film.getName());
         assertEquals("G", saveFilm.getMpa().getName());
-        assertEquals("Комедия", saveFilm.getGenres().get(0).getName());
+        Assertions.assertTrue(saveFilm.getGenres().contains(genre));
     }
 
     @Test
@@ -71,7 +72,7 @@ class FilmDbStorageTest {
 
         assertEquals(updatedFilm.getName(), updateFilm.getName());
         assertEquals("PG", updatedFilm.getMpa().getName());
-        assertEquals("Мультфильм", updatedFilm.getGenres().get(1).getName());
+        Assertions.assertTrue(updatedFilm.getGenres().contains(updateGenre));
     }
 
     @Test
@@ -92,7 +93,7 @@ class FilmDbStorageTest {
 
         assertEquals(getFilm.getName(), film.getName());
         assertEquals("G", getFilm.getMpa().getName());
-        assertEquals("Комедия", getFilm.getGenres().get(0).getName());
+        Assertions.assertTrue(getFilm.getGenres().contains(genre));
     }
 
     @Test
