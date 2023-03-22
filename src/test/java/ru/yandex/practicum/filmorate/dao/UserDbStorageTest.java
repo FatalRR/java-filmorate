@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 class UserDbStorageTest {
     private final UserDbStorage userDbStorage;
+    private final FriendStorage friendStorage;
 
     @Test
     void shouldSave() {
@@ -84,7 +86,7 @@ class UserDbStorageTest {
         Integer userId = userDbStorage.save(user).getId();
         Integer friendUserId = userDbStorage.save(friendUser).getId();
 
-        userDbStorage.addFriend(userId, friendUserId);
+        friendStorage.addFriend(userId, friendUserId);
 
         List<User> testFriend = userDbStorage.getFriends(userId);
 
@@ -111,8 +113,8 @@ class UserDbStorageTest {
         Integer userId = userDbStorage.save(user).getId();
         Integer friendUserId = userDbStorage.save(friendUser).getId();
 
-        userDbStorage.addFriend(userId, friendUserId);
-        userDbStorage.removeFriend(userId, friendUserId);
+        friendStorage.addFriend(userId, friendUserId);
+        friendStorage.removeFriend(userId, friendUserId);
 
         List<User> testFriend = userDbStorage.getFriends(userId);
 
@@ -144,10 +146,10 @@ class UserDbStorageTest {
         Integer user2Id = userDbStorage.save(user2).getId();
         Integer user3Id = userDbStorage.save(user3).getId();
 
-        userDbStorage.addFriend(user1Id, user3Id);
-        userDbStorage.addFriend(user2Id, user3Id);
+        friendStorage.addFriend(user1Id, user3Id);
+        friendStorage.addFriend(user2Id, user3Id);
 
-        List<User> commonFriends = userDbStorage.getCorparateFriends(user1Id, user2Id);
+        List<User> commonFriends = userDbStorage.getCorporateFriends(user1Id, user2Id);
 
         assertEquals(1, commonFriends.size());
         assertEquals(commonFriends.get(0).getEmail(), user3.getEmail());

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.List;
@@ -19,10 +20,12 @@ import java.util.Objects;
 @Slf4j
 public class UserService {
     private final UserStorage userStorage;
+    private final FriendStorage friendStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(UserStorage userStorage, FriendStorage friendStorage) {
         this.userStorage = userStorage;
+        this.friendStorage = friendStorage;
     }
 
     public List<User> getAll() {
@@ -53,7 +56,7 @@ public class UserService {
 
     public void addFriend(Integer id, Integer friendId) {
         try {
-            userStorage.addFriend(id, friendId);
+            friendStorage.addFriend(id, friendId);
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
@@ -61,7 +64,7 @@ public class UserService {
 
     public void removeFriend(Integer id, Integer friendId) {
         try {
-            userStorage.removeFriend(id, friendId);
+            friendStorage.removeFriend(id, friendId);
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
@@ -72,7 +75,7 @@ public class UserService {
     }
 
     public List<User> corporateFriends(Integer id, Integer otherId) {
-        return userStorage.getCorparateFriends(id, otherId);
+        return userStorage.getCorporateFriends(id, otherId);
     }
 
     public void validate(User user) throws ValidationException {
