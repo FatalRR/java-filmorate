@@ -72,19 +72,6 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public void addFriend(Integer id, Integer friendId) {
-        String sqlQuery = "INSERT INTO friends_user (user_id, friend_id) " +
-                "VALUES (?, ?)";
-        jdbcTemplate.update(sqlQuery, id, friendId);
-    }
-
-    @Override
-    public void removeFriend(Integer id, Integer friendId) {
-        String sqlQuery = "DELETE FROM friends_user WHERE user_id = ? AND friend_id = ?";
-        jdbcTemplate.update(sqlQuery, id, friendId);
-    }
-
-    @Override
     public List<User> getFriends(Integer id) {
         String sqlQuery = "SELECT * FROM users AS u " +
                 "JOIN (SELECT friend_id " +
@@ -95,7 +82,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getCorparateFriends(Integer id, Integer otherId) {
+    public List<User> getCorporateFriends(Integer id, Integer otherId) {
         String sqlQuery = "SELECT * FROM users AS u " +
                 "JOIN (SELECT friend_id FROM friends_user WHERE user_id = ?) AS fr " +
                 "ON u.user_id = fr.friend_id " +
