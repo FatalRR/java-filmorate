@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.User;
@@ -15,6 +16,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -38,31 +40,33 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUserById(@PathVariable int userId) {
-        log.debug(String.valueOf(LogMessages.TRY_GET_OBJECT));
+    public User getUserById(@PathVariable Integer userId) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_OBJECT), userId);
         return userService.getById(userId);
     }
 
     @PutMapping("/{userId}/friends/{friendId}")
-    public User addFriend(@PathVariable int userId, @PathVariable int friendId) {
+    public Integer addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         log.debug(String.valueOf(LogMessages.TRY_ADD_FRIEND));
-        return userService.addFriend(userId, friendId);
+        userService.addFriend(userId, friendId);
+        return friendId;
     }
 
     @DeleteMapping("/{userId}/friends/{friendId}")
-    public User deleteFriend(@PathVariable int userId, @PathVariable int friendId) {
+    public Integer deleteFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         log.debug(String.valueOf(LogMessages.TRY_REMOVE_FRIEND));
-        return userService.removeFriend(userId, friendId);
+        userService.removeFriend(userId, friendId);
+        return friendId;
     }
 
     @GetMapping("/{userId}/friends")
-    public List<User> getFriends(@PathVariable int userId) {
+    public List<User> getFriends(@PathVariable Integer userId) {
         log.debug(String.valueOf(LogMessages.TRY_GET_FRIENDS));
         return userService.getFriends(userId);
     }
 
     @GetMapping("/{userId}/friends/common/{otherId}")
-    public List<User> getCorporateFriends(@PathVariable int userId, @PathVariable int otherId) {
+    public List<User> getCorporateFriends(@PathVariable Integer userId, @PathVariable Integer otherId) {
         log.debug(String.valueOf(LogMessages.TRY_GET_CORPORATE_FRIENDS));
         return userService.corporateFriends(userId, otherId);
     }

@@ -15,9 +15,10 @@ import java.util.Set;
 @ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Builder
-public class User extends Entity{
-    private int id;
+public class User extends Entity {
+    private Integer id;
     @Email(message = ExceptionMessages.INCORRECT_EMAIL)
     private String email;
     @NotBlank(message = ExceptionMessages.EMPTY_LOGIN)
