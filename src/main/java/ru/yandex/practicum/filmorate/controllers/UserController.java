@@ -45,6 +45,12 @@ public class UserController {
         return userService.getById(userId);
     }
 
+    @DeleteMapping("/{userId}")
+    public void removeById(@PathVariable Integer userId) {
+        log.debug(String.valueOf(LogMessages.TRY_REMOVE_OBJECT), userId);
+        userService.removeById(userId);
+    }
+
     @PutMapping("/{userId}/friends/{friendId}")
     public Integer addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         log.debug(String.valueOf(LogMessages.TRY_ADD_FRIEND));
