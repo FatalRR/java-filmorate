@@ -53,6 +53,14 @@ public class UserService {
         }
     }
 
+    public void removeById(Integer id){
+        try {
+            userStorage.removeById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
+        }
+    }
+
     public void addFriend(Integer id, Integer friendId) {
         try {
             friendStorage.addFriend(id, friendId);

@@ -94,6 +94,12 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public void removeById(Integer id) {
+        String sqlQuery = "DELETE FROM films WHERE film_id = " + id;
+        jdbcTemplate.update(sqlQuery);
+    }
+
     public List<Film> getPopular(Integer count) {
         String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name FROM films AS f " +
                 "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes " +

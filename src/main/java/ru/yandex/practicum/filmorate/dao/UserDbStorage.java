@@ -72,6 +72,12 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
+    public void removeById(Integer id) {
+        String sqlQuery = "DELETE FROM users WHERE user_id = " + id;
+        jdbcTemplate.update(sqlQuery);
+    }
+
+    @Override
     public List<User> getFriends(Integer id) {
         String sqlQuery = "SELECT * FROM users AS u " +
                 "JOIN (SELECT friend_id " +
