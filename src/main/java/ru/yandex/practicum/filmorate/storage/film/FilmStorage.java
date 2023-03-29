@@ -13,5 +13,7 @@ public interface FilmStorage {
 
     Film getById(Integer id);
 
+    void removeById(Integer id);
+
     List<Film> getPopular(Integer count);
 }

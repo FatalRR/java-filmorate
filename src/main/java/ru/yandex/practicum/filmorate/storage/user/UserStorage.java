@@ -13,6 +13,8 @@ public interface UserStorage {
 
     User getById(Integer id);
 
+    void removeById(Integer id);
+
     List<User> getFriends(Integer id);
 
     List<User> getCorporateFriends(Integer id, Integer otherId);
