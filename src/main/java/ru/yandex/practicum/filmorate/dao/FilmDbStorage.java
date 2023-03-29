@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.FilmMapper;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
+import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -33,10 +34,12 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public List<Film> getAll() {
-        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name " +
+        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_id, d.director_name " +
                 "FROM films AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
-                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id";
+                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id "+
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director AS d ON fd.director_id = d.director_id";
 
         return addFilm(sqlQuery);
     }
@@ -59,6 +62,7 @@ public class FilmDbStorage implements FilmStorage {
             film.setId((Integer) keyHolder.getKey());
         }
         addGenre(film);
+        addDirector(film);
         return getById(film.getId());
     }
 
@@ -75,15 +79,18 @@ public class FilmDbStorage implements FilmStorage {
                 film.getMpa().getId(),
                 film.getId());
         addGenre(film);
+        addDirector(film);
         return getById(film.getId());
     }
 
     @Override
     public Film getById(Integer id) {
-        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name " +
+        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_id, d.director_name " +
                 "FROM films AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
                 "WHERE f.film_id = " + id;
 
         List<Film> films = addFilm(sqlQuery);
@@ -95,12 +102,15 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getPopular(Integer count) {
-        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name FROM films AS f " +
+        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_name " +
+                "FROM films AS f " +
                 "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes " +
                 "FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
                 "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
                 "ORDER BY film_likes DESC " +
                 "LIMIT " + count;
 
@@ -120,6 +130,12 @@ public class FilmDbStorage implements FilmStorage {
                 films.get(filmId).addFilmGenre(Genre.builder()
                         .id(rs.getInt("genre_id"))
                         .name(genres_name).build());
+            }
+            String directors_name = rs.getString("director_name");
+            if (directors_name != null) {
+                films.get(filmId).addFilmDirectors(Director.builder()
+                        .id(rs.getInt("director_id"))
+                        .name(directors_name).build());
             }
         });
         return new ArrayList<>(films.values());
@@ -147,6 +163,32 @@ public class FilmDbStorage implements FilmStorage {
             @Override
             public int getBatchSize() {
                 return genresSet.size();
+            }
+        });
+    }
+
+    private void addDirector(Film film) {
+        Integer filmId = film.getId();
+        jdbcTemplate.update("DELETE FROM film_director WHERE film_id = ?", filmId);
+        Set<Director> directorSet = film.getDirectors();
+        String addDirectorsQuery = "MERGE INTO film_director (film_id, director_id) " +
+                "VALUES (?,?)";
+        jdbcTemplate.batchUpdate(addDirectorsQuery, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, filmId);
+                Iterator<Director> directorIterator = directorSet.iterator();
+                for (int j = 0; j <= i && directorIterator.hasNext(); j++) {
+                    Director director = directorIterator.next();
+                    if (j == i) {
+                        ps.setInt(2, director.getId());
+                    }
+                }
+            }
+
+            @Override
+            public int getBatchSize() {
+                return directorSet.size();
             }
         });
     }
