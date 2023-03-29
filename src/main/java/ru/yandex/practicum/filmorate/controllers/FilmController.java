@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmSort;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
 import javax.validation.Valid;
@@ -63,5 +64,11 @@ public class FilmController {
     public List<Film> getPopular(@RequestParam(defaultValue = "10") Integer count) {
         log.debug(String.valueOf(LogMessages.TRY_GET_POPULAR));
         return filmService.getPopular(count);
+    }
+
+    @GetMapping("/director/{directorId}")
+    public  List<Film> getDirectorFilm(@PathVariable Integer directorId, @RequestParam FilmSort sort) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_DIRECTOR_FILM), directorId, sort);
+        return filmService.getDirectorFilm(directorId, sort);
     }
 }
