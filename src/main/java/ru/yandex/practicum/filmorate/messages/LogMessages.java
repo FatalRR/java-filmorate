@@ -6,6 +6,7 @@ public enum LogMessages {
     GET("Объект получен по id: {}"),
     TRY_ADD("Попытка добавить: {}"),
     TRY_UPDATE("Попытка обновить: {}"),
+    TRY_REMOVE("Попытка удалить: {}"),
     TRY_GET_POPULAR("Попытка получить популярный объект: {}"),
     TRY_GET_OBJECT("Попытка получить объект: {}"),
     TRY_REMOVE_LIKE("Попытка удалить поставленный лайк: film_id {}, user_id {}"),
