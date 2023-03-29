@@ -45,6 +45,12 @@ public class FilmController {
         return filmService.getById(filmId);
     }
 
+    @DeleteMapping("/{filmId}")
+    public void removeById(@PathVariable Integer filmId) {
+        log.debug(String.valueOf(LogMessages.TRY_REMOVE_OBJECT), filmId);
+        filmService.removeById(filmId);
+    }
+
     @PutMapping("/{filmId}/like/{userId}")
     public Integer addLike(@PathVariable Integer filmId, @PathVariable Integer userId) {
         log.debug(String.valueOf(LogMessages.TRY_ADD_LIKE), filmId, userId);
