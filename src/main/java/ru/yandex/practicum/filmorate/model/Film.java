@@ -29,8 +29,13 @@ public class Film extends Entity {
     @NotNull
     private Mpa mpa;
     private final Set<Genre> genres = new TreeSet<>(Comparator.comparingInt(Genre::getId));
+    private final Set<Director> directors = new TreeSet<>(Comparator.comparingInt(Director::getId));
 
     public void addFilmGenre(Genre genre) {
         genres.add(genre);
+    }
+
+    public void addFilmDirectors(Director director) {
+        directors.add(director);
     }
 }
