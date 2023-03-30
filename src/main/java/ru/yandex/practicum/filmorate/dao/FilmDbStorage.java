@@ -9,9 +9,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.FilmMapper;
+import ru.yandex.practicum.filmorate.mappers.FilmWithGenreAndDirectorMapper;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmSort;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 
@@ -25,11 +27,13 @@ import java.util.*;
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FilmMapper filmMapper;
+    private final FilmWithGenreAndDirectorMapper filmWithGenreAndDirectorMapper;
 
     @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper, FilmWithGenreAndDirectorMapper filmWithGenreAndDirectorMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.filmMapper = filmMapper;
+        this.filmWithGenreAndDirectorMapper = filmWithGenreAndDirectorMapper;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_id, d.director_name " +
                 "FROM films AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
-                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id "+
+                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
                 "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
                 "LEFT JOIN director AS d ON fd.director_id = d.director_id";
 
@@ -191,5 +195,45 @@ public class FilmDbStorage implements FilmStorage {
                 return directorSet.size();
             }
         });
+    }
+
+    @Override
+    public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
+        switch (sortBy) {
+            case likes:
+                String sqlLikesQuery = "SELECT * FROM films AS f " +
+                        "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+                        "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
+                        "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                        "LEFT JOIN film_likes AS fl ON f.film_id = fl.film_id " +
+                        "LEFT JOIN film_director AS fd ON f.film_id=fd.film_id " +
+                        "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
+                        "WHERE d.director_id = ? " +
+                        "GROUP BY f.film_id " +
+                        "ORDER BY COUNT(fl.film_id) DESC";
+
+                if (jdbcTemplate.query(sqlLikesQuery, filmWithGenreAndDirectorMapper, directorId).isEmpty()) {
+                    throw new NotFoundException("Режиссер не найден");
+                }
+                return jdbcTemplate.query(sqlLikesQuery, filmWithGenreAndDirectorMapper, directorId);
+            case year:
+                String sqlYearsQuery = "SELECT * FROM films AS f " +
+                        "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
+                        "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
+                        "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                        "LEFT JOIN film_director AS fd ON f.film_id=fd.film_id " +
+                        "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
+                        "WHERE d.director_id = ? " +
+                        "GROUP BY f.film_id " +
+                        "ORDER BY f.release_date";
+
+                if (jdbcTemplate.query(sqlYearsQuery, filmWithGenreAndDirectorMapper, directorId).isEmpty()) {
+                    throw new NotFoundException("Режиссер не найден");
+                }
+
+                return jdbcTemplate.query(sqlYearsQuery, filmWithGenreAndDirectorMapper, directorId);
+            default:
+                return new ArrayList<>();
+        }
     }
 }
