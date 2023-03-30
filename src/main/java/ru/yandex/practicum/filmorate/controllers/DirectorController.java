@@ -36,13 +36,13 @@ public class DirectorController {
     }
 
     @PutMapping
-    public Director update (@Valid @RequestBody Director director) {
+    public Director update(@Valid @RequestBody Director director) {
         log.debug(String.valueOf(LogMessages.TRY_UPDATE), director);
         return directorService.update(director);
     }
 
     @DeleteMapping("/{directorId}")
-    public void removeById (@PathVariable Integer directorId) {
+    public void removeById(@PathVariable Integer directorId) {
         log.debug(String.valueOf(LogMessages.TRY_REMOVE), directorId);
         directorService.removeById(directorId);
     }

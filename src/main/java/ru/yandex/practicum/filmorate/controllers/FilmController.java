@@ -67,8 +67,8 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
-    public  List<Film> getDirectorFilm(@PathVariable Integer directorId, @RequestParam FilmSort sort) {
-        log.debug(String.valueOf(LogMessages.TRY_GET_DIRECTOR_FILM), directorId, sort);
-        return filmService.getDirectorFilm(directorId, sort);
+    public  List<Film> getDirectorFilm(@PathVariable Integer directorId, @RequestParam FilmSort sortBy) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_DIRECTOR_FILM), directorId, sortBy);
+        return filmService.getDirectorFilm(directorId, sortBy);
     }
 }
