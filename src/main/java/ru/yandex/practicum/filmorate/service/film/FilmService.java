@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmSort;
-import ru.yandex.practicum.filmorate.storage.film.DirectorStorage;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
 
@@ -23,13 +22,11 @@ public class FilmService {
     private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
     private final LikeStorage likeStorage;
-    private final DirectorStorage directorStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, LikeStorage likeStorage, DirectorStorage directorStorage) {
+    public FilmService(FilmStorage filmStorage, LikeStorage likeStorage) {
         this.filmStorage = filmStorage;
         this.likeStorage = likeStorage;
-        this.directorStorage = directorStorage;
     }
 
     public List<Film> getAll() {
