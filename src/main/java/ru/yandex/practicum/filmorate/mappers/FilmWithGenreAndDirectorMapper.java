@@ -29,18 +29,23 @@ public class FilmWithGenreAndDirectorMapper implements RowMapper<Film> {
                         .build())
                 .build();
 
-        Director director = Director.builder()
-                .id(rs.getInt("director_id"))
-                .name(rs.getString("director_name"))
-                .build();
-        film.addFilmDirectors(director);
+        if (rs.getInt("director_id") != 0) {
+            Director director = Director.builder()
+                    .id(rs.getInt("director_id"))
+                    .name(rs.getString("director_name"))
+                    .build();
+            film.addFilmDirectors(director);
+        }
 
-        Genre genre = Genre.builder()
-                .id(rs.getInt("genre_id"))
-                .name(rs.getString("genre_name"))
-                .build();
 
-        film.addFilmGenre(genre);
+        if (rs.getInt("genre_id") != 0) {
+            Genre genre = Genre.builder()
+                    .id(rs.getInt("genre_id"))
+                    .name(rs.getString("genre_name"))
+                    .build();
+
+            film.addFilmGenre(genre);
+        }
 
         return film;
     }
