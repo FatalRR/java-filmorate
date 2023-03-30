@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.FilmMapper;
 import ru.yandex.practicum.filmorate.mappers.FilmWithGenreAndDirectorMapper;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
+import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmSort;
@@ -213,7 +214,7 @@ public class FilmDbStorage implements FilmStorage {
                         "ORDER BY COUNT(fl.film_id) DESC";
 
                 if (jdbcTemplate.query(sqlLikesQuery, filmWithGenreAndDirectorMapper, directorId).isEmpty()) {
-                    throw new NotFoundException("Режиссер не найден");
+                    throw new NotFoundException(String.valueOf(LogMessages.MISSING));
                 }
                 return jdbcTemplate.query(sqlLikesQuery, filmWithGenreAndDirectorMapper, directorId);
             case year:
@@ -228,7 +229,7 @@ public class FilmDbStorage implements FilmStorage {
                         "ORDER BY f.release_date";
 
                 if (jdbcTemplate.query(sqlYearsQuery, filmWithGenreAndDirectorMapper, directorId).isEmpty()) {
-                    throw new NotFoundException("Режиссер не найден");
+                    throw new NotFoundException(String.valueOf(LogMessages.MISSING));
                 }
 
                 return jdbcTemplate.query(sqlYearsQuery, filmWithGenreAndDirectorMapper, directorId);
