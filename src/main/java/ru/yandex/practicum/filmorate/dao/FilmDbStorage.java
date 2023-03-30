@@ -121,11 +121,11 @@ public class FilmDbStorage implements FilmStorage {
                 Film film = filmMapper.mapRow(rs, filmId);
                 films.put(filmId, film);
             }
-            String genres_name = rs.getString("genre_name");
-            if (genres_name != null) {
+            String genreName = rs.getString("genre_name");
+            if (genreName != null) {
                 films.get(filmId).addFilmGenre(Genre.builder()
                         .id(rs.getInt("genre_id"))
-                        .name(genres_name).build());
+                        .name(rs.getString("genre_name")).build());
             }
         });
         return new ArrayList<>(films.values());

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.UserMapper;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
@@ -19,6 +20,7 @@ import java.util.List;
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
     private final UserMapper userMapper;
+
     @Autowired
     public UserDbStorage(JdbcTemplate jdbcTemplate, UserMapper userMapper) {
         this.jdbcTemplate = jdbcTemplate;
@@ -84,6 +86,13 @@ public class UserDbStorage implements UserStorage {
                 "FROM friends_user " +
                 "WHERE user_id = ?) AS f " +
                 "ON u.user_id = f.friend_id";
+
+        String checkQuery = "SELECT COUNT(*) FROM users WHERE user_id = ?";
+
+        if (jdbcTemplate.queryForObject(checkQuery, Integer.class, id) == 0) {
+            throw new NotFoundException("Пользователь с ID " + id + " не найден");
+        }
+
         return jdbcTemplate.query(sqlQuery, userMapper, id);
     }
 
