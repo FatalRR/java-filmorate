@@ -8,6 +8,9 @@ import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Review;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ReviewService {
 
@@ -22,11 +25,23 @@ public class ReviewService {
         return storage.save(review);
     }
 
+    public Review update(Review review) {
+        return storage.update(review);
+    }
+
+    public void delete(Integer id) {
+        storage.delete(id);
+    }
+
     public Review getById(Integer id) {
-        try {
-            return storage.getById(id);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
-        }
+        return storage.getById(id);
+    }
+
+    public List<Review> getFilmReviews(Optional<Integer> filmId, Integer count) {
+        return storage.getFilmReviews(filmId, count);
+    }
+
+    public void changeUseful(Integer reviewId, Boolean isUsefulIncreasing) {
+        storage.changeUseful(reviewId, isUsefulIncreasing);
     }
 }

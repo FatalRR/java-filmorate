@@ -22,7 +22,15 @@ public enum LogMessages {
     LIKE_DONE("Пользователь с id: {} поставил лайк фильму с id: {}"),
     LIKE_CANCEL("Пользователь с id: {} удалил лайк у фильма с id: {}"),
     LIST_OF_FRIENDS("Список общих друзей пользователей: {}"),
+<<<<<<< HEAD
     TRY_GET_DIRECTOR_FILM("Попытка получение списка фильмов режиссера directorId={}, sort={}.");
+=======
+    TRY_DELETE("Попытка удалить: {}"),
+    REVIEW_LIKE_DONE("Пользователь с id: {} поставил лайк отзыву с id: {}"),
+    REVIEW_LIKE_CANCEL("Пользователь с id: {} удалил лайк у отзыва с id: {}"),
+    REVIEW_DISLIKE_DONE("Пользователь с id: {} поставил дизлайк отзыву с id: {}"),
+    REVIEW_DISLIKE_CANCEL("Пользователь с id: {} удалил дизлайк у отзыва с id: {}");
+>>>>>>> 5317a0b (feat: complete functionality)
 
     private final String textLog;
 

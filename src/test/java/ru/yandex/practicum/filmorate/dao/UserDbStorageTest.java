@@ -62,7 +62,7 @@ class UserDbStorageTest {
                 .birthday(LocalDate.of(1999, 9, 9))
                 .build();
 
-        Integer userId = userDbStorage.save(user).getId();
+        Integer userId = userDbStorage.save(user).getReviewId();
         User testUser = userDbStorage.getById(userId);
 
         assertEquals(user, testUser);
@@ -83,8 +83,8 @@ class UserDbStorageTest {
                 .birthday(LocalDate.of(1990, 9, 9))
                 .build();
 
-        Integer userId = userDbStorage.save(user).getId();
-        Integer friendUserId = userDbStorage.save(friendUser).getId();
+        Integer userId = userDbStorage.save(user).getReviewId();
+        Integer friendUserId = userDbStorage.save(friendUser).getReviewId();
 
         friendStorage.addFriend(userId, friendUserId);
 
@@ -110,8 +110,8 @@ class UserDbStorageTest {
                 .birthday(LocalDate.of(1990, 9, 9))
                 .build();
 
-        Integer userId = userDbStorage.save(user).getId();
-        Integer friendUserId = userDbStorage.save(friendUser).getId();
+        Integer userId = userDbStorage.save(user).getReviewId();
+        Integer friendUserId = userDbStorage.save(friendUser).getReviewId();
 
         friendStorage.addFriend(userId, friendUserId);
         friendStorage.removeFriend(userId, friendUserId);
@@ -142,9 +142,9 @@ class UserDbStorageTest {
                 .birthday(LocalDate.of(1992, 9, 9))
                 .build();
 
-        Integer user1Id = userDbStorage.save(user1).getId();
-        Integer user2Id = userDbStorage.save(user2).getId();
-        Integer user3Id = userDbStorage.save(user3).getId();
+        Integer user1Id = userDbStorage.save(user1).getReviewId();
+        Integer user2Id = userDbStorage.save(user2).getReviewId();
+        Integer user3Id = userDbStorage.save(user3).getReviewId();
 
         friendStorage.addFriend(user1Id, user3Id);
         friendStorage.addFriend(user2Id, user3Id);

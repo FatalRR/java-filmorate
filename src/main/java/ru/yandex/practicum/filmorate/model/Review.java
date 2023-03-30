@@ -5,13 +5,12 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Data
 @Builder
-public class Review extends Entity {
+public class Review {
 
-    private Integer id;
+    private Integer reviewId;
 
     @NotNull
     @NotBlank
@@ -20,10 +19,10 @@ public class Review extends Entity {
     @NotNull
     private Boolean isPositive;
 
-    @Positive
+    @NotNull
     private Integer userId;
 
-    @Positive
+    @NotNull
     private Integer filmId;
 
     private Integer useful;
