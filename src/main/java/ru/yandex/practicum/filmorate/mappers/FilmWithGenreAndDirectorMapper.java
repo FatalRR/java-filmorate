@@ -37,7 +37,6 @@ public class FilmWithGenreAndDirectorMapper implements RowMapper<Film> {
             film.addFilmDirectors(director);
         }
 
-
         if (rs.getInt("genre_id") != 0) {
             Genre genre = Genre.builder()
                     .id(rs.getInt("genre_id"))
