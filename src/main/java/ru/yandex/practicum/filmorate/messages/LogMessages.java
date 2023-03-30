@@ -6,6 +6,7 @@ public enum LogMessages {
     GET("Объект получен по id: {}"),
     TRY_ADD("Попытка добавить: {}"),
     TRY_UPDATE("Попытка обновить: {}"),
+    TRY_REMOVE("Попытка удалить: {}"),
     TRY_GET_POPULAR("Попытка получить популярный объект: {}"),
     TRY_GET_OBJECT("Попытка получить объект: {}"),
     TRY_REMOVE_LIKE("Попытка удалить поставленный лайк: film_id {}, user_id {}"),
@@ -20,7 +21,8 @@ public enum LogMessages {
     FRIEND_CANCEL("Пользователи с id: {} и {} больше не друзья"),
     LIKE_DONE("Пользователь с id: {} поставил лайк фильму с id: {}"),
     LIKE_CANCEL("Пользователь с id: {} удалил лайк у фильма с id: {}"),
-    LIST_OF_FRIENDS("Список общих друзей пользователей: {}");
+    LIST_OF_FRIENDS("Список общих друзей пользователей: {}"),
+    TRY_GET_DIRECTOR_FILM("Попытка получение списка фильмов режиссера directorId={}, sort={}.");
 
     private final String textLog;
 

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.FilmSort;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
 
@@ -65,6 +66,10 @@ public class FilmService {
 
     public List<Film> getPopular(Integer count) {
         return filmStorage.getPopular(count);
+    }
+
+    public List<Film> getDirectorFilm (Integer directorId, FilmSort sortBy) {
+        return filmStorage.getDirectorFilm(directorId, sortBy);
     }
 
     public void validate(Film film) {
