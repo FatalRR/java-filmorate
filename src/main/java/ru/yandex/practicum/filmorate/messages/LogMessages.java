@@ -23,7 +23,7 @@ public enum LogMessages {
     LIKE_CANCEL("Пользователь с id: {} удалил лайк у фильма с id: {}"),
     LIST_OF_FRIENDS("Список общих друзей пользователей: {}"),
     TRY_GET_DIRECTOR_FILM("Попытка получение списка фильмов режиссера directorId={}, sort={}."),
-    TRY_GET_SEARCH("Попытка поиска: query = {}, by = {}.");
+    TRY_GET_SEARCH("Попытка поиска: query = {}, by = {}."),
     TRY_DELETE("Попытка удалить: {}"),
     REVIEW_LIKE_DONE("Пользователь с id: {} поставил лайк отзыву с id: {}"),
     REVIEW_LIKE_CANCEL("Пользователь с id: {} удалил лайк у отзыва с id: {}"),
