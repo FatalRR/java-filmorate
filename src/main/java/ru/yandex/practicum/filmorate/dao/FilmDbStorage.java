@@ -11,6 +11,7 @@ import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.FilmMapper;
 import ru.yandex.practicum.filmorate.mappers.FilmWithGenreAndDirectorMapper;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
+
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -122,7 +123,8 @@ public class FilmDbStorage implements FilmStorage {
         return addFilm(sqlQuery);
     }
 
-    private List<Film> addFilm(String sqlQuery) {
+    @Override
+    public List<Film> addFilm(String sqlQuery) {
         Map<Integer, Film> films = new HashMap<>();
         jdbcTemplate.query(sqlQuery, rs -> {
             Integer filmId = rs.getInt("film_id");

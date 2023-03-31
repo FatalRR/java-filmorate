@@ -67,8 +67,14 @@ public class FilmController {
     }
 
     @GetMapping("/director/{directorId}")
-    public  List<Film> getDirectorFilm(@PathVariable Integer directorId, @RequestParam FilmSort sortBy) {
-        log.debug(String.valueOf(LogMessages.TRY_GET_DIRECTOR_FILM), directorId, sortBy);
-        return filmService.getDirectorFilm(directorId, sortBy);
+    public  List<Film> getDirectorFilm(@PathVariable Integer directorId, @RequestParam FilmSort sort) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_DIRECTOR_FILM), directorId, sort);
+        return filmService.getDirectorFilm(directorId, sort);
+    }
+
+    @GetMapping("/search")
+    public List<Film> searchFilms(@RequestParam String query, @RequestParam String by) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_SEARCH), query, by);
+        return filmService.getSearch(query, by);
     }
 }

@@ -17,4 +17,6 @@ public interface FilmStorage {
     List<Film> getPopular(Integer count);
 
     List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy);
+
+    List<Film> addFilm(String sqlQuery);
 }
