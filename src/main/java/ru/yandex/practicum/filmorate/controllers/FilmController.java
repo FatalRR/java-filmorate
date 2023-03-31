@@ -71,4 +71,10 @@ public class FilmController {
         log.debug(String.valueOf(LogMessages.TRY_GET_DIRECTOR_FILM), directorId, sortBy);
         return filmService.getDirectorFilm(directorId, sortBy);
     }
+
+    @GetMapping("/search")
+    public List<Film> searchFilms(@RequestParam String query, @RequestParam String by) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_SEARCH), query, by);
+        return filmService.getSearch(query, by);
+    }
 }
