@@ -25,6 +25,7 @@ public enum LogMessages {
     TRY_GET_DIRECTOR_FILM("Попытка получение списка фильмов режиссера directorId={}, sort={}."),
     TRY_GET_SEARCH("Попытка поиска: query = {}, by = {}.");
 
+
     private final String textLog;
 
     LogMessages(String textLog) {
