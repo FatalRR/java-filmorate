@@ -237,4 +237,38 @@ public class FilmDbStorage implements FilmStorage {
                 return new ArrayList<>();
         }
     }
+
+    public List<Integer> commonFilms(final Integer userId, final Integer otherUserId) {
+        String sqlRequst = " (SELECT DISTINCT t1.film_id FROM " +
+                        "(SELECT film_id FROM film_likes " +
+                        "WHERE user_id = ?) AS t1 " +
+                        "INNER JOIN " +
+                        "(SELECT film_id  FROM film_likes " +
+                        "WHERE user_id = ?) AS t2 " +
+                        "ON  t1.film_id = t2.film_id)";
+
+        List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, otherUserId);
+        List<Integer> pfilmIds = new ArrayList<>();
+        filmIds.forEach((pfilmIds::add));
+
+        return pfilmIds;
+    }
+
+
+    public List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId) {
+        String sqlRequst = " SELECT film_id FROM film_likes " +
+                        "WHERE film_id NOT IN " +
+                        "(SELECT t1.film_id FROM " +
+                        "(SELECT film_id  FROM film_likes " +
+                        "WHERE user_id = ?) AS t1 " +
+                        "INNER JOIN " +
+                        "(SELECT film_id  FROM film_likes " +
+                        "WHERE user_id = ?) AS t2 " +
+                        "ON  t1.film_id = t2.film_id) " +
+                        "AND user_id = ?";
+
+        List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, mainUserId, otherUserId, otherUserId);
+
+        return filmIds;
+    }
 }

@@ -17,4 +17,9 @@ public interface FilmStorage {
     List<Film> getPopular(Integer count);
 
     List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy);
+
+    List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId);
+
+    List<Integer> commonFilms(final Integer userId, final Integer otherUserId);
+
 }
