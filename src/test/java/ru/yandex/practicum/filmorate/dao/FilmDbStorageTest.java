@@ -89,7 +89,7 @@ class FilmDbStorageTest {
         film.addFilmGenre(genre);
 
         Film saveFilm = filmDbStorage.save(film);
-        Film getFilm = filmDbStorage.getById(saveFilm.getReviewId());
+        Film getFilm = filmDbStorage.getById(saveFilm.getId());
 
         assertEquals(getFilm.getName(), film.getName());
         assertEquals("G", getFilm.getMpa().getName());
@@ -118,7 +118,7 @@ class FilmDbStorageTest {
         film.addFilmGenre(genre);
         Film saveFilm = filmDbStorage.save(film);
         User likeUser = userDbStorage.save(user);
-        likeDbStorage.addLike(saveFilm.getReviewId(), likeUser.getReviewId());
+        likeDbStorage.addLike(saveFilm.getId(), likeUser.getId());
 
         List<Film> listFilm = filmDbStorage.getPopular(1);
         assertEquals(listFilm.get(0).getName(), saveFilm.getName());
