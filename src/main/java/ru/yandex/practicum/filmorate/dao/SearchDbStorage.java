@@ -47,7 +47,7 @@ public class SearchDbStorage implements SearchStorage {
                 case "title":
                     return "WHERE LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
             }
-        } else if(requestParam.size() == 2) {
+        } else if (requestParam.size() == 2) {
             return "WHERE LOWER(d.director_name) LIKE " + "LOWER('%" + query + "%') OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') ";
         } else {
             throw new ValidationException(INCORRECT_PAR);
