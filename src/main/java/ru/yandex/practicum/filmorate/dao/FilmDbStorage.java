@@ -122,7 +122,8 @@ public class FilmDbStorage implements FilmStorage {
         return addFilm(sqlQuery);
     }
 
-    private List<Film> addFilm(String sqlQuery) {
+    @Override
+    public List<Film> addFilm(String sqlQuery) {
         Map<Integer, Film> films = new HashMap<>();
         jdbcTemplate.query(sqlQuery, rs -> {
             Integer filmId = rs.getInt("film_id");

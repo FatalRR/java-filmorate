@@ -18,8 +18,9 @@ public interface FilmStorage {
 
     List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy);
 
+    List<Film> addFilm(String sqlQuery);
+
     List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId);
 
     List<Integer> commonFilms(final Integer userId, final Integer otherUserId);
-
 }

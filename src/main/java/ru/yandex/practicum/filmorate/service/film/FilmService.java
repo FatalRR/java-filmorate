@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmSort;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
+import ru.yandex.practicum.filmorate.storage.film.SearchStorage;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,11 +23,14 @@ public class FilmService {
     private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
     private final LikeStorage likeStorage;
+    private final SearchStorage searchStorage;
+
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, LikeStorage likeStorage) {
+    public FilmService(FilmStorage filmStorage, LikeStorage likeStorage, SearchStorage searchStorage) {
         this.filmStorage = filmStorage;
         this.likeStorage = likeStorage;
+        this.searchStorage = searchStorage;
     }
 
     public List<Film> getAll() {
@@ -77,4 +81,9 @@ public class FilmService {
             throw new ValidationException(ValidationExceptionMessages.RELEASE_DATE.toString());
         }
     }
+
+    public List<Film> getSearch(String query, String by) {
+        return searchStorage.getSearch(query, by);
+    }
+
 }
