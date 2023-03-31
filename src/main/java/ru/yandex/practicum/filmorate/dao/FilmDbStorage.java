@@ -43,7 +43,7 @@ public class FilmDbStorage implements FilmStorage {
         String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_id, d.director_name " +
                 "FROM films AS f JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
-                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id "+
+                "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
                 "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
                 "LEFT JOIN director AS d ON fd.director_id = d.director_id";
 
@@ -123,7 +123,8 @@ public class FilmDbStorage implements FilmStorage {
         return addFilm(sqlQuery);
     }
 
-    private List<Film> addFilm(String sqlQuery) {
+    @Override
+    public List<Film> addFilm(String sqlQuery) {
         Map<Integer, Film> films = new HashMap<>();
         jdbcTemplate.query(sqlQuery, rs -> {
             Integer filmId = rs.getInt("film_id");
@@ -142,12 +143,6 @@ public class FilmDbStorage implements FilmStorage {
                 films.get(filmId).addFilmDirectors(Director.builder()
                         .id(rs.getInt("director_id"))
                         .name(directorName).build());
-            }
-            String directors_name = rs.getString("director_name");
-            if (directors_name != null) {
-                films.get(filmId).addFilmDirectors(Director.builder()
-                        .id(rs.getInt("director_id"))
-                        .name(directors_name).build());
             }
         });
         return new ArrayList<>(films.values());

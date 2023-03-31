@@ -71,11 +71,11 @@ public class FilmService {
         return filmStorage.getPopular(count);
     }
 
-    public List<Film> getDirectorFilm (Integer directorId, FilmSort sort) {
+    public List<Film> getDirectorFilm(Integer directorId, FilmSort sort) {
         return null;
     }
 
-    public List<Film> getSearch(String query, String by){
+    public List<Film> getSearch(String query, String by) {
         return searchStorage.getSearch(query, by);
     }
 

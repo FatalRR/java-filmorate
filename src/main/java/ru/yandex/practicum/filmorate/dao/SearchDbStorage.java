@@ -1,12 +1,9 @@
 package ru.yandex.practicum.filmorate.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.yandex.practicum.filmorate.mappers.FilmMapper;
-import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.SearchStorage;
 
 import java.util.*;
@@ -14,15 +11,11 @@ import java.util.stream.Collectors;
 
 @Repository
 public class SearchDbStorage implements SearchStorage {
-
-    private final JdbcTemplate jdbcTemplate;
-
-    private final FilmMapper filmMapper;
+    private final FilmStorage filmStorage;
 
     @Autowired
-    public SearchDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.filmMapper = filmMapper;
+    public SearchDbStorage(FilmStorage filmStorage) {
+        this.filmStorage = filmStorage;
     }
 
     @Override
@@ -43,7 +36,7 @@ public class SearchDbStorage implements SearchStorage {
                             "WHERE LOWER(d.director_name) LIKE " + "LOWER('%" + query + "%') " +
                             "GROUP BY g.genre_id, f.name " +
                             "ORDER BY film_likes DESC";
-                    return addFilm(sqlQueryDirector);
+                    return filmStorage.addFilm(sqlQueryDirector);
 
                 case "title":
                     String sqlQueryTitle = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_id, d.director_name " +
@@ -58,7 +51,7 @@ public class SearchDbStorage implements SearchStorage {
                             "WHERE LOWER(f.name) LIKE " + "LOWER('%" + query + "%') " +
                             "GROUP BY g.genre_id, f.name " +
                             "ORDER BY film_likes DESC";
-                    return addFilm(sqlQueryTitle);
+                    return filmStorage.addFilm(sqlQueryTitle);
             }
 
         } else {
@@ -75,32 +68,8 @@ public class SearchDbStorage implements SearchStorage {
                     "OR LOWER(f.name) LIKE " + "LOWER('%" + query + "%') " +
                     "GROUP BY g.genre_id, f.name " +
                     "ORDER BY film_likes DESC";
-            return addFilm(sqlQueryDT).stream().sorted(Comparator.comparing(Film::getId).reversed()).collect(Collectors.toList());
+            return filmStorage.addFilm(sqlQueryDT).stream().sorted(Comparator.comparing(Film::getId).reversed()).collect(Collectors.toList());
         }
         return null;
-    }
-
-    private List<Film> addFilm(String sqlQuery) {
-        Map<Integer, Film> films = new HashMap<>();
-        jdbcTemplate.query(sqlQuery, rs -> {
-            Integer filmId = rs.getInt("film_id");
-            if (!films.containsKey(rs.getInt("film_id"))) {
-                Film film = filmMapper.mapRow(rs, filmId);
-                films.put(filmId, film);
-            }
-
-            if (rs.getString("genre_name") != null) {
-                films.get(filmId).addFilmGenre(Genre.builder()
-                        .id(rs.getInt("genre_id"))
-                        .name(rs.getString("genre_name")).build());
-            }
-
-            if (rs.getString("director_name") != null) {
-                films.get(filmId).addFilmDirectors(Director.builder()
-                        .id(rs.getInt("director_id"))
-                        .name(rs.getString("director_name")).build());
-            }
-        });
-        return new ArrayList<>(films.values());
     }
 }
