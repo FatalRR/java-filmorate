@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
-import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmSort;
 import ru.yandex.practicum.filmorate.service.user.UserService;
@@ -65,15 +64,7 @@ public class FilmService {
     public void addLike(Integer filmId, Integer userId) {
         likeStorage.addLike(filmId, userId);
         log.info(String.valueOf(LogMessages.LIKE_DONE), userId, filmId);
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(userId)
-                .eventType(EventTypes.LIKE)
-                .operation(OperationTypes.ADD)
-                .entityId(filmId)
-                .eventId(0)
-                .build();
-        userService.addEvent(event);
+        userService.addEvent(userId, EventTypes.LIKE, OperationTypes.ADD, filmId);
     }
 
     public void removeLike(Integer filmId, Integer userId) {
@@ -83,15 +74,7 @@ public class FilmService {
         } else {
             throw new NotFoundException(ExceptionMessages.POSITIVE_ID);
         }
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(userId)
-                .eventType(EventTypes.LIKE)
-                .operation(OperationTypes.REMOVE)
-                .entityId(filmId)
-                .eventId(0)
-                .build();
-        userService.addEvent(event);
+        userService.addEvent(userId, EventTypes.LIKE, OperationTypes.REMOVE, filmId);
     }
 
     public List<Film> getPopular(Integer count) {

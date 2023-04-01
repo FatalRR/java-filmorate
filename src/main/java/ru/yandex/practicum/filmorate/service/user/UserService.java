@@ -78,15 +78,7 @@ public class UserService {
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(id)
-                .eventType(EventTypes.FRIEND)
-                .operation(OperationTypes.ADD)
-                .entityId(friendId)
-                .eventId(0)
-                .build();
-        addEvent(event);
+        addEvent(id, EventTypes.FRIEND, OperationTypes.ADD, friendId);
     }
 
     public void removeFriend(Integer id, Integer friendId) {
@@ -95,15 +87,7 @@ public class UserService {
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(id)
-                .eventType(EventTypes.FRIEND)
-                .operation(OperationTypes.REMOVE)
-                .entityId(friendId)
-                .eventId(0)
-                .build();
-        addEvent(event);
+        addEvent(id, EventTypes.FRIEND, OperationTypes.REMOVE, friendId);
     }
 
     public List<User> getFriends(Integer id) {
@@ -148,7 +132,7 @@ public class UserService {
         return feedStorage.getByUserId(userId);
     }
 
-    public Event addEvent(Event event) {
-        return feedStorage.addEvent(event);
+    public Event addEvent(Integer userId, EventTypes eventTypes, OperationTypes operationTypes, Integer entityId) {
+        return feedStorage.addEvent(userId, eventTypes, operationTypes, entityId);
     }
 }

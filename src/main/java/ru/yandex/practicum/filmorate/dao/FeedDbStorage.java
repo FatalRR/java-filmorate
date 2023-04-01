@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.enums.EventTypes;
+import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.mappers.FeedMapper;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.storage.user.FeedStorage;
@@ -38,7 +40,16 @@ public class FeedDbStorage implements FeedStorage {
     }
 
     @Override
-    public Event addEvent(Event event) {
+    public Event addEvent(Integer userId, EventTypes eventTypes, OperationTypes operationTypes, Integer entityId) {
+        Event event = Event.builder()
+                .timestamp(System.currentTimeMillis())
+                .userId(userId)
+                .eventType(eventTypes)
+                .operation(operationTypes)
+                .entityId(entityId)
+                .eventId(0)
+                .build();
+
         String sqlQuery = "INSERT INTO feed (timestamps, user_id, event_type, operation, entity_id) " +
                 "VALUES (?, ?, ?, ?, ?);";
         KeyHolder keyHolder = new GeneratedKeyHolder();

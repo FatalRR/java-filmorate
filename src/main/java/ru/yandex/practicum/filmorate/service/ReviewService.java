@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.ReviewDbStorage;
 import ru.yandex.practicum.filmorate.enums.EventTypes;
 import ru.yandex.practicum.filmorate.enums.OperationTypes;
-import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Review;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
@@ -26,44 +25,20 @@ public class ReviewService {
 
     public Review save(Review review) {
         Review addReview = storage.save(review);
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(addReview.getUserId())
-                .eventType(EventTypes.REVIEW)
-                .operation(OperationTypes.ADD)
-                .entityId(addReview.getReviewId())
-                .eventId(0)
-                .build();
-        userService.addEvent(event);
+        userService.addEvent(addReview.getUserId(), EventTypes.REVIEW, OperationTypes.ADD, addReview.getReviewId());
         return addReview;
     }
 
     public Review update(Review review) {
         Review updatedReview = storage.update(review);
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(updatedReview.getUserId())
-                .eventType(EventTypes.REVIEW)
-                .operation(OperationTypes.UPDATE)
-                .entityId(updatedReview.getReviewId())
-                .eventId(0)
-                .build();
-        userService.addEvent(event);
+        userService.addEvent(updatedReview.getUserId(), EventTypes.REVIEW, OperationTypes.UPDATE, updatedReview.getReviewId());
         return updatedReview;
     }
 
     public void delete(Integer id) {
         Review review = getById(id);
         storage.delete(id);
-        Event event = Event.builder()
-                .timestamp(System.currentTimeMillis())
-                .userId(review.getUserId())
-                .eventType(EventTypes.REVIEW)
-                .operation(OperationTypes.REMOVE)
-                .entityId(review.getReviewId())
-                .eventId(0)
-                .build();
-        userService.addEvent(event);
+        userService.addEvent(review.getUserId(), EventTypes.REVIEW, OperationTypes.REMOVE, review.getReviewId());
     }
 
     public Review getById(Integer id) {
