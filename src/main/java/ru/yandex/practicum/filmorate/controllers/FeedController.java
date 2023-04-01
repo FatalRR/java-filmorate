@@ -18,9 +18,9 @@ public class FeedController {
     private final UserService userService;
 
     @GetMapping("/users/{id}/feed")
-    public List<Event> findById(@PathVariable Integer userId) {
-        log.debug(String.valueOf(LogMessages.TRY_GET_EVENT_FEED), userId);
-        userService.getById(userId);
-        return userService.getByUserId(userId);
+    public List<Event> findById(@PathVariable Integer id) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_EVENT_FEED), id);
+        userService.getById(id);
+        return userService.getByUserId(id);
     }
 }
