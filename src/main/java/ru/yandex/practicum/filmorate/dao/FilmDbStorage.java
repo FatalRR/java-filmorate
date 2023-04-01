@@ -113,12 +113,14 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getPopular(Integer count) {
-        String sqlQuery = "SELECT f.*, m.mpa_name, GROUP_CONCAT(g.genre_id) as genre_id, GROUP_CONCAT(g.genre_name) as genre_name " +
+        String sqlQuery = "SELECT f.*, m.mpa_name, GROUP_CONCAT(g.genre_id) as genre_id, GROUP_CONCAT(g.genre_name) as genre_name, d.director_id, d.director_name " +
                 "FROM films AS f " +
                 "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
                 "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
+                "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
                 "GROUP BY f.film_id " +
                 "ORDER BY film_likes DESC " +
                 "LIMIT " + count;
