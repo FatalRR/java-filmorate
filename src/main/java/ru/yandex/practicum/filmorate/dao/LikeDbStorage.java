@@ -20,6 +20,7 @@ public class LikeDbStorage implements LikeStorage {
                 "VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, filmId, userId);
     }
+
     @Override
     public void removeLike(Integer filmId, Integer userId) {
         String sqlQuery = "DELETE FROM film_likes " +
