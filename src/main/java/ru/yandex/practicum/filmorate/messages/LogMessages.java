@@ -30,7 +30,9 @@ public enum LogMessages {
     REVIEW_LIKE_DONE("Пользователь с id: {} поставил лайк отзыву с id: {}"),
     REVIEW_LIKE_CANCEL("Пользователь с id: {} удалил лайк у отзыва с id: {}"),
     REVIEW_DISLIKE_DONE("Пользователь с id: {} поставил дизлайк отзыву с id: {}"),
-    REVIEW_DISLIKE_CANCEL("Пользователь с id: {} удалил дизлайк у отзыва с id: {}");
+    REVIEW_DISLIKE_CANCEL("Пользователь с id: {} удалил дизлайк у отзыва с id: {}"),
+    TRY_GET_COMMON_FILMS("Попытка получить список общих просмотренных фильмов для пользователей с id: {} и id: {}"),
+    LIST_OF_COMMON_FILMS("Предоставлен список общих просмотренных фильмов для пользователей с id: {} и id: {}");
 
     private final String textLog;
 

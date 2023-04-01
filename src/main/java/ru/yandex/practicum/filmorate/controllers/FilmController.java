@@ -77,4 +77,10 @@ public class FilmController {
         log.debug(String.valueOf(LogMessages.TRY_GET_SEARCH), query, by);
         return filmService.getSearch(query, by);
     }
+
+    @GetMapping("/common")
+    public List<Film> commonFilms(@RequestParam("userId") Integer userId, @RequestParam("friendId") Integer friendId) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_COMMON_FILMS), userId, friendId);
+        return filmService.getCommon(userId, friendId);
+    }
 }

@@ -23,4 +23,6 @@ public interface FilmStorage {
     List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId);
 
     List<Integer> commonFilms(final Integer userId, final Integer otherUserId);
+
+    List<Film> getCommon(Integer userId, Integer friendId);
 }
