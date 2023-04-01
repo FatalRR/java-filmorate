@@ -4,6 +4,7 @@ import javax.validation.constraints.*;
 
 import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
+import ru.yandex.practicum.filmorate.validator.IsAfter;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -21,6 +22,7 @@ public class Film extends Entity {
     private String name;
     @Size(max = 200, message = ExceptionMessages.MAX_DESCRIPTION)
     private String description;
+    @IsAfter("1895-12-28")
     private LocalDate releaseDate;
     @PositiveOrZero(message = ExceptionMessages.POSITIVE_DURATION)
     private long duration;

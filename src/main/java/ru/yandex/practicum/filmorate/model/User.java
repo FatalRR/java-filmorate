@@ -5,6 +5,7 @@ import javax.validation.constraints.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
+import ru.yandex.practicum.filmorate.validator.ReplaceNoNameWithLogin;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Builder
+@ReplaceNoNameWithLogin
 public class User extends Entity {
     private Integer id;
     @Email(message = ExceptionMessages.INCORRECT_EMAIL)

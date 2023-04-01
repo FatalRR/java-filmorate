@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.review;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,5 +51,13 @@ public class ReviewService {
 
     public void changeUseful(Integer reviewId, Boolean isUsefulIncreasing) {
         storage.changeUseful(reviewId, isUsefulIncreasing);
+    }
+
+    public void saveLike(Integer reviewId, Integer userId, Boolean isLike) {
+        storage.saveLike(reviewId, userId, isLike);
+    }
+
+    public void deleteLike(Integer reviewId, Integer userId, Boolean isLike) {
+        storage.deleteLike(reviewId, userId, isLike);
     }
 }

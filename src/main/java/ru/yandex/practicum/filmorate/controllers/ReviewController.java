@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Review;
-import ru.yandex.practicum.filmorate.service.ReviewService;
+import ru.yandex.practicum.filmorate.service.review.ReviewService;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
@@ -70,6 +70,8 @@ public class ReviewController {
     public void addLikeToReview(@PathVariable Integer id, @PathVariable Integer userId) {
         log.debug(String.valueOf(LogMessages.TRY_ADD), "лайк");
         userService.getById(userId);
+        reviewService.getById(id);
+        reviewService.saveLike(id, userId, true);
         reviewService.changeUseful(id, true);
         log.debug(String.valueOf(LogMessages.REVIEW_LIKE_DONE), userId, id);
     }
@@ -78,6 +80,8 @@ public class ReviewController {
     public void addDislikeToReview(@PathVariable Integer id, @PathVariable Integer userId) {
         log.debug(String.valueOf(LogMessages.TRY_ADD), "дизлайк");
         userService.getById(userId);
+        reviewService.getById(id);
+        reviewService.saveLike(id, userId, false);
         reviewService.changeUseful(id, false);
         log.debug(String.valueOf(LogMessages.REVIEW_DISLIKE_DONE), userId, id);
     }
@@ -86,6 +90,7 @@ public class ReviewController {
     public void deleteLikeFromReview(@PathVariable Integer id, @PathVariable Integer userId) {
         log.debug(String.valueOf(LogMessages.TRY_DELETE), "лайк");
         userService.getById(userId);
+        reviewService.deleteLike(id, userId, true);
         reviewService.changeUseful(id, false);
         log.debug(String.valueOf(LogMessages.REVIEW_LIKE_CANCEL), userId, id);
     }
@@ -94,6 +99,8 @@ public class ReviewController {
     public void deleteDislikeFromReview(@PathVariable Integer id, @PathVariable Integer userId) {
         log.debug(String.valueOf(LogMessages.TRY_DELETE), "дизлайк");
         userService.getById(userId);
+        userService.getById(userId);
+        reviewService.deleteLike(id, userId, false);
         reviewService.changeUseful(id, true);
         log.debug(String.valueOf(LogMessages.REVIEW_DISLIKE_CANCEL), userId, id);
     }

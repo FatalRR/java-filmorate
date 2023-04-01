@@ -1,4 +1,5 @@
-DROP TABLE IF EXISTS users, films, mpa, genre, film_genre, film_likes, friends_user, director, film_director CASCADE;
+DROP TABLE IF EXISTS users, films, mpa, genre, film_genre, film_likes, friends_user,
+    director, film_director, reviews, reviews_likes, feed CASCADE;
 
 CREATE TABLE IF NOT EXISTS mpa
  (
@@ -78,7 +79,7 @@ CREATE TABLE IF NOT EXISTS reviews_likes
 (
 review_id INTEGER REFERENCES reviews (review_id) ON DELETE CASCADE,
 user_id INTEGER REFERENCES users (user_id) ON DELETE CASCADE,
-is_like BOOLEAN,
+is_like BOOLEAN NOT NULL,
 CONSTRAINT reviews_likes_pk PRIMARY KEY (review_id, user_id)
 );
 

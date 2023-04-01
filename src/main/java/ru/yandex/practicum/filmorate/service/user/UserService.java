@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.enums.EventTypes;
 import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
-import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
-import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
@@ -51,12 +49,10 @@ public class UserService {
     }
 
     public User save(User user) {
-        validate(user);
         return userStorage.save(user);
     }
 
     public User update(User user) {
-        validate(user);
         if (Objects.equals(getById(user.getId()).getId(), user.getId())) {
             return userStorage.update(user);
         } else {
@@ -104,13 +100,6 @@ public class UserService {
 
     public List<User> corporateFriends(Integer id, Integer otherId) {
         return userStorage.getCorporateFriends(id, otherId);
-    }
-
-    public void validate(User user) throws ValidationException {
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.info(ValidationExceptionMessages.LOGIN_TO_NAME.toString());
-            user.setName(user.getLogin());
-        }
     }
 
     public List<Film> recommendations(Integer userId) {
