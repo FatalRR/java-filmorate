@@ -3,15 +3,20 @@ package ru.yandex.practicum.filmorate.service.user;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
+import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,11 +25,18 @@ import java.util.Objects;
 public class UserService {
     private final UserStorage userStorage;
     private final FriendStorage friendStorage;
+    private final FilmStorage filmStorage;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserService(UserStorage userStorage, FriendStorage friendStorage) {
+    public UserService(UserStorage userStorage,
+                       FriendStorage friendStorage,
+                       FilmStorage filmStorage,
+                       JdbcTemplate jdbcTemplate) {
         this.userStorage = userStorage;
         this.friendStorage = friendStorage;
+        this.filmStorage = filmStorage;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public List<User> getAll() {
@@ -90,5 +102,28 @@ public class UserService {
             log.info(ValidationExceptionMessages.LOGIN_TO_NAME.toString());
             user.setName(user.getLogin());
         }
+    }
+
+    public List<Film> recommendations(Integer userId) {
+        String sqlRequst = " SELECT user_id FROM film_likes ";
+        List<Integer> userIds = jdbcTemplate.queryForList(sqlRequst, Integer.class);
+
+        Integer idMaxNumFilms = 0;
+        int maxNumFilms = 0;
+
+        for (Integer usrId : userIds) {
+            if (!userId.equals(usrId)) {
+                if (filmStorage.commonFilms(userId, usrId).size() > maxNumFilms) {
+                    maxNumFilms = filmStorage.commonFilms(userId, usrId).size();
+                    idMaxNumFilms = usrId;
+                }
+            }
+        }
+
+        List<Film> films = new ArrayList<>();
+        filmStorage.differentFilms(userId, idMaxNumFilms).forEach(id -> films.add(filmStorage.getById(id)));
+        log.info(String.valueOf(LogMessages.LIST_OF_RECOMMENDATIONS), userId);
+
+        return films;
     }
 }
