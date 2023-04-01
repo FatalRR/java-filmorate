@@ -54,6 +54,11 @@ public class FilmService {
         return filmStorage.getById(id);
     }
 
+    public void removeById(Integer id) {
+        log.info(String.valueOf(LogMessages.REMOVE), id);
+        filmStorage.removeById(id);
+    }
+
     public void addLike(Integer filmId, Integer userId) {
         likeStorage.addLike(filmId, userId);
         log.info(String.valueOf(LogMessages.LIKE_DONE), userId, filmId);
