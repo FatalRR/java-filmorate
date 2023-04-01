@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 
@@ -45,6 +46,12 @@ public class UserController {
         return userService.getById(userId);
     }
 
+    @DeleteMapping("/{userId}")
+    public void removeById(@PathVariable Integer userId) {
+        log.debug(String.valueOf(LogMessages.TRY_REMOVE_OBJECT), userId);
+        userService.removeById(userId);
+    }
+
     @PutMapping("/{userId}/friends/{friendId}")
     public Integer addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         log.debug(String.valueOf(LogMessages.TRY_ADD_FRIEND));
@@ -69,5 +76,11 @@ public class UserController {
     public List<User> getCorporateFriends(@PathVariable Integer userId, @PathVariable Integer otherId) {
         log.debug(String.valueOf(LogMessages.TRY_GET_CORPORATE_FRIENDS));
         return userService.corporateFriends(userId, otherId);
+    }
+
+    @GetMapping("/{userId}/recommendations")
+    public List<Film> recommendations(@PathVariable Integer userId) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_RECOMMENDATIONS), userId);
+        return userService.recommendations(userId);
     }
 }
