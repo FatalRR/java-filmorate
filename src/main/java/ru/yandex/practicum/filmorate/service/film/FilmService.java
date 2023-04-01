@@ -3,13 +3,16 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.excepions.ValidationException;
+import ru.yandex.practicum.filmorate.enums.EventTypes;
+import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
+import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.FilmSort;
+import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.film.SearchStorage;
@@ -24,13 +27,17 @@ public class FilmService {
     private final FilmStorage filmStorage;
     private final LikeStorage likeStorage;
     private final SearchStorage searchStorage;
-
+    private final UserService userService;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, LikeStorage likeStorage, SearchStorage searchStorage) {
+    public FilmService(FilmStorage filmStorage,
+                       LikeStorage likeStorage,
+                       SearchStorage searchStorage,
+                       UserService userService) {
         this.filmStorage = filmStorage;
         this.likeStorage = likeStorage;
         this.searchStorage = searchStorage;
+        this.userService = userService;
     }
 
     public List<Film> getAll() {
@@ -62,6 +69,7 @@ public class FilmService {
     public void addLike(Integer filmId, Integer userId) {
         likeStorage.addLike(filmId, userId);
         log.info(String.valueOf(LogMessages.LIKE_DONE), userId, filmId);
+        userService.addEvent(userId, EventTypes.LIKE, OperationTypes.ADD, filmId);
     }
 
     public void removeLike(Integer filmId, Integer userId) {
@@ -71,6 +79,7 @@ public class FilmService {
         } else {
             throw new NotFoundException(ExceptionMessages.POSITIVE_ID);
         }
+        userService.addEvent(userId, EventTypes.LIKE, OperationTypes.REMOVE, filmId);
     }
 
     public List<Film> getPopular(Integer count) {
