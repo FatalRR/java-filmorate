@@ -101,12 +101,13 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getPopular(Integer count) {
-        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name FROM films AS f " +
-                "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes " +
-                "FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
+        String sqlQuery = "SELECT f.*, m.mpa_name, GROUP_CONCAT(g.genre_id) as genre_id, GROUP_CONCAT(g.genre_name) as genre_name " +
+                "FROM films AS f " +
+                "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
                 "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
+                "GROUP BY f.film_id " +
                 "ORDER BY film_likes DESC " +
                 "LIMIT " + count;
 
@@ -121,11 +122,18 @@ public class FilmDbStorage implements FilmStorage {
                 Film film = filmMapper.mapRow(rs, filmId);
                 films.put(filmId, film);
             }
-            String genreName = rs.getString("genre_name");
-            if (genreName != null) {
-                films.get(filmId).addFilmGenre(Genre.builder()
-                        .id(rs.getInt("genre_id"))
-                        .name(rs.getString("genre_name")).build());
+            String genreIds = rs.getString("genre_id");
+            String genreNames = rs.getString("genre_name");
+            if (genreIds != null && genreNames != null) {
+                String[] genreIdArray = genreIds.split(",");
+                String[] genreNameArray = genreNames.split(",");
+                for (int i = 0; i < genreIdArray.length; i++) {
+                    int genreId = Integer.parseInt(genreIdArray[i]);
+                    String genreName = genreNameArray[i];
+                    films.get(filmId).addFilmGenre(Genre.builder()
+                            .id(genreId)
+                            .name(genreName).build());
+                }
             }
         });
         return new ArrayList<>(films.values());
