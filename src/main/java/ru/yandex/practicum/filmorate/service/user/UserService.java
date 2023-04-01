@@ -5,14 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.enums.EventTypes;
+import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
+import ru.yandex.practicum.filmorate.model.Event;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -26,16 +30,19 @@ public class UserService {
     private final UserStorage userStorage;
     private final FriendStorage friendStorage;
     private final FilmStorage filmStorage;
+    private final FeedStorage feedStorage;
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public UserService(UserStorage userStorage,
                        FriendStorage friendStorage,
                        FilmStorage filmStorage,
+                       FeedStorage feedStorage,
                        JdbcTemplate jdbcTemplate) {
         this.userStorage = userStorage;
         this.friendStorage = friendStorage;
         this.filmStorage = filmStorage;
+        this.feedStorage = feedStorage;
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -71,6 +78,15 @@ public class UserService {
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
+        Event event = Event.builder()
+                .timestamp(System.currentTimeMillis())
+                .userId(id)
+                .eventType(EventTypes.FRIEND)
+                .operation(OperationTypes.ADD)
+                .entityId(friendId)
+                .eventId(0)
+                .build();
+        addEvent(event);
     }
 
     public void removeFriend(Integer id, Integer friendId) {
@@ -79,6 +95,15 @@ public class UserService {
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
+        Event event = Event.builder()
+                .timestamp(System.currentTimeMillis())
+                .userId(id)
+                .eventType(EventTypes.FRIEND)
+                .operation(OperationTypes.REMOVE)
+                .entityId(friendId)
+                .eventId(0)
+                .build();
+        addEvent(event);
     }
 
     public List<User> getFriends(Integer id) {
@@ -117,5 +142,13 @@ public class UserService {
         log.info(String.valueOf(LogMessages.LIST_OF_RECOMMENDATIONS), userId);
 
         return films;
+    }
+
+    public List<Event> getByUserId(Integer userId) {
+        return feedStorage.getByUserId(userId);
+    }
+
+    public Event addEvent(Event event) {
+        return feedStorage.addEvent(event);
     }
 }
