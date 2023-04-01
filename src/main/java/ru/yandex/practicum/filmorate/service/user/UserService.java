@@ -53,7 +53,7 @@ public class UserService {
         }
     }
 
-    public void removeById(Integer id){
+    public void removeById(Integer id) {
         try {
             userStorage.removeById(id);
         } catch (EmptyResultDataAccessException e) {
