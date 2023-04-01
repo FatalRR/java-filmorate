@@ -30,7 +30,8 @@ public enum LogMessages {
     REVIEW_LIKE_DONE("Пользователь с id: {} поставил лайк отзыву с id: {}"),
     REVIEW_LIKE_CANCEL("Пользователь с id: {} удалил лайк у отзыва с id: {}"),
     REVIEW_DISLIKE_DONE("Пользователь с id: {} поставил дизлайк отзыву с id: {}"),
-    REVIEW_DISLIKE_CANCEL("Пользователь с id: {} удалил дизлайк у отзыва с id: {}");
+    REVIEW_DISLIKE_CANCEL("Пользователь с id: {} удалил дизлайк у отзыва с id: {}"),
+    TRY_GET_EVENT_FEED("Попытка получения ленты событий с пользователем id: {}");
 
     private final String textLog;
 
