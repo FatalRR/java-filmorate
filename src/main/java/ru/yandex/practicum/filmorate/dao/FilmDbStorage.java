@@ -148,8 +148,10 @@ public class FilmDbStorage implements FilmStorage {
                             .id(genreId)
                             .name(genreName).build());
                 }
+            }
 
-            if (rs.getString("director_name") != null) {
+            String directorName = rs.getString("director_name");
+            if (directorName != null) {
                 films.get(filmId).addFilmDirectors(Director.builder()
                         .id(rs.getInt("director_id"))
                         .name(directorName).build());
@@ -252,12 +254,12 @@ public class FilmDbStorage implements FilmStorage {
 
     public List<Integer> commonFilms(final Integer userId, final Integer otherUserId) {
         String sqlRequst = " (SELECT DISTINCT t1.film_id FROM " +
-                        "(SELECT film_id FROM film_likes " +
-                        "WHERE user_id = ?) AS t1 " +
-                        "INNER JOIN " +
-                        "(SELECT film_id  FROM film_likes " +
-                        "WHERE user_id = ?) AS t2 " +
-                        "ON  t1.film_id = t2.film_id)";
+                "(SELECT film_id FROM film_likes " +
+                "WHERE user_id = ?) AS t1 " +
+                "INNER JOIN " +
+                "(SELECT film_id  FROM film_likes " +
+                "WHERE user_id = ?) AS t2 " +
+                "ON  t1.film_id = t2.film_id)";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, otherUserId);
         List<Integer> pfilmIds = new ArrayList<>();
@@ -269,15 +271,15 @@ public class FilmDbStorage implements FilmStorage {
 
     public List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId) {
         String sqlRequst = " SELECT film_id FROM film_likes " +
-                        "WHERE film_id NOT IN " +
-                        "(SELECT t1.film_id FROM " +
-                        "(SELECT film_id  FROM film_likes " +
-                        "WHERE user_id = ?) AS t1 " +
-                        "INNER JOIN " +
-                        "(SELECT film_id  FROM film_likes " +
-                        "WHERE user_id = ?) AS t2 " +
-                        "ON  t1.film_id = t2.film_id) " +
-                        "AND user_id = ?";
+                "WHERE film_id NOT IN " +
+                "(SELECT t1.film_id FROM " +
+                "(SELECT film_id  FROM film_likes " +
+                "WHERE user_id = ?) AS t1 " +
+                "INNER JOIN " +
+                "(SELECT film_id  FROM film_likes " +
+                "WHERE user_id = ?) AS t2 " +
+                "ON  t1.film_id = t2.film_id) " +
+                "AND user_id = ?";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, mainUserId, otherUserId, otherUserId);
 
