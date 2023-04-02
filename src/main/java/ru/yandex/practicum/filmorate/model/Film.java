@@ -26,8 +26,7 @@ public class Film extends Entity {
     private LocalDate releaseDate;
     @PositiveOrZero(message = ExceptionMessages.POSITIVE_DURATION)
     private long duration;
-    @NotNull
-    private int rate;
+
     @NotNull
     private Mpa mpa;
     private final Set<Genre> genres = new TreeSet<>(Comparator.comparingInt(Genre::getId));

@@ -66,4 +66,3 @@ public class FeedDbStorage implements FeedStorage {
         return event;
     }
 }
-

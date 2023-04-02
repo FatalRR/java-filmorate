@@ -89,5 +89,4 @@ public class FilmController {
         log.debug(String.valueOf(LogMessages.TRY_GET_COMMON_FILMS), userId, friendId);
         return filmService.getCommon(userId, friendId);
     }
-
 }

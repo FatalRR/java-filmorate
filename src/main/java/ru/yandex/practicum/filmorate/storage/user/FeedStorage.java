@@ -10,5 +10,4 @@ public interface FeedStorage {
     List<Event> getByUserId(Integer userId);
 
     Event addEvent(Integer userId, EventTypes eventTypes, OperationTypes operationTypes, Integer entityId);
-
 }
