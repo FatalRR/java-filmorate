@@ -67,9 +67,9 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopular(@RequestParam(defaultValue = "10") Integer count) {
+    public List<Film> getPopular(@RequestParam(defaultValue = "10") Integer count, @RequestParam (required = false) Integer genreId, @RequestParam(required = false) Integer year) {
         log.debug(String.valueOf(LogMessages.TRY_GET_POPULAR));
-        return filmService.getPopular(count);
+        return filmService.getPopular(count, genreId, year);
     }
 
     @GetMapping("/director/{directorId}")
@@ -83,4 +83,5 @@ public class FilmController {
         log.debug(String.valueOf(LogMessages.TRY_GET_SEARCH), query, by);
         return filmService.getSearch(query, by);
     }
+
 }

@@ -25,7 +25,6 @@ public class FilmService {
     private final LikeStorage likeStorage;
     private final SearchStorage searchStorage;
 
-
     @Autowired
     public FilmService(FilmStorage filmStorage, LikeStorage likeStorage, SearchStorage searchStorage) {
         this.filmStorage = filmStorage;
@@ -73,8 +72,8 @@ public class FilmService {
         }
     }
 
-    public List<Film> getPopular(Integer count) {
-        return filmStorage.getPopular(count);
+    public List<Film> getPopular(Integer count, Integer genreId, Integer year) {
+        return filmStorage.getPopular(count, genreId, year);
     }
 
     public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
