@@ -19,7 +19,7 @@ public class DirectorController {
 
     @GetMapping
     public List<Director> getAll() {
-        log.info(String.valueOf(LogMessages.COUNT), directorService.getAll().size());
+        log.debug(String.valueOf(LogMessages.COUNT), directorService.getAll().size());
         return directorService.getAll();
     }
 

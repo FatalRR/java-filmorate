@@ -62,7 +62,7 @@ public class ReviewController {
     public List<Review> getFilmReviews(@RequestParam Optional<Integer> filmId,
                                        @RequestParam(defaultValue = "10") Integer count) {
         filmId.ifPresent(filmService::getById);
-        log.info(String.valueOf(LogMessages.COUNT), reviewService.getFilmReviews(filmId, count).size());
+        log.debug(String.valueOf(LogMessages.COUNT), reviewService.getFilmReviews(filmId, count).size());
         return reviewService.getFilmReviews(filmId, count);
     }
 
