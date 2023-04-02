@@ -14,6 +14,7 @@
     <name>filmorate</name>
     <description>Demo project for Spring Boot</description>
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>11</java.version>
     </properties>
     <dependencies>
@@ -81,7 +82,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+<!--            <scope>runtime</scope>-->
         </dependency>
     </dependencies>
 
@@ -90,6 +91,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                    <jvmArguments>-Dfile.encoding=UTF8</jvmArguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>
