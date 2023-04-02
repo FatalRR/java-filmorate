@@ -82,8 +82,8 @@ public class FilmService {
         userService.addEvent(userId, EventTypes.LIKE, OperationTypes.REMOVE, filmId);
     }
 
-    public List<Film> getPopular(Integer count) {
-        return filmStorage.getPopular(count);
+    public List<Film> getPopular(Integer count, Integer genreId, Integer year) {
+        return filmStorage.getPopular(count, genreId, year);
     }
 
     public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {

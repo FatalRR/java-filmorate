@@ -22,6 +22,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @Primary
@@ -112,7 +113,7 @@ public class FilmDbStorage implements FilmStorage {
         jdbcTemplate.update(sqlQuery);
     }
 
-    public List<Film> getPopular(Integer count) {
+    public List<Film> getPopular(Integer count, Integer genreId, Integer year) {
         String sqlQuery = "SELECT f.*, m.mpa_name, GROUP_CONCAT(g.genre_id) as genre_id, GROUP_CONCAT(g.genre_name) as genre_name, d.director_id, d.director_name " +
                 "FROM films AS f " +
                 "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
@@ -124,6 +125,21 @@ public class FilmDbStorage implements FilmStorage {
                 "GROUP BY f.film_id " +
                 "ORDER BY film_likes DESC " +
                 "LIMIT " + count;
+
+        if (genreId != null && year == null) {
+            return addFilm(sqlQuery).stream()
+                    .filter(film -> film.getGenres().contains(Genre.builder().id(genreId).build()))
+                    .collect(Collectors.toList());
+        } else if (genreId == null && year != null) {
+            return addFilm(sqlQuery).stream()
+                    .filter(film -> film.getReleaseDate().getYear() == year)
+                    .collect(Collectors.toList());
+        } else if (genreId != null && year != null) {
+            return addFilm(sqlQuery).stream()
+                    .filter(film -> film.getGenres().contains(Genre.builder().id(genreId).build()))
+                    .filter(film -> film.getReleaseDate().getYear() == year)
+                    .collect(Collectors.toList());
+        }
 
         return addFilm(sqlQuery);
     }
@@ -308,4 +324,5 @@ public class FilmDbStorage implements FilmStorage {
 
         return films;
     }
+
 }
