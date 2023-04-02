@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping
     public List<User> getAll() {
-        log.info(String.valueOf(LogMessages.COUNT), userService.getAll().size());
+        log.debug(String.valueOf(LogMessages.COUNT), userService.getAll().size());
         return userService.getAll();
     }
 

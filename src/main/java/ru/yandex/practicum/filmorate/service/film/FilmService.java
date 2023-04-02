@@ -6,12 +6,10 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.enums.EventTypes;
 import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
-import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
-import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.FilmSort;
+import ru.yandex.practicum.filmorate.enums.FilmSort;
 import ru.yandex.practicum.filmorate.service.user.UserService;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
@@ -45,13 +43,11 @@ public class FilmService {
     }
 
     public Film save(Film film) {
-        validate(film);
         log.info(String.valueOf(LogMessages.ADD), film);
         return filmStorage.save(film);
     }
 
     public Film update(Film film) {
-        validate(film);
         log.info(String.valueOf(LogMessages.UPDATE), film);
         return filmStorage.update(film);
     }
@@ -88,12 +84,6 @@ public class FilmService {
 
     public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
         return filmStorage.getDirectorFilm(directorId, sortBy);
-    }
-
-    public void validate(Film film) {
-        if (film.getReleaseDate().isBefore(BOUNDARY_DATE)) {
-            throw new ValidationException(ValidationExceptionMessages.RELEASE_DATE.toString());
-        }
     }
 
     public List<Film> getSearch(String query, String by) {

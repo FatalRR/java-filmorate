@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage;
+package ru.yandex.practicum.filmorate.storage.review;
 
 import ru.yandex.practicum.filmorate.model.Review;
 
@@ -20,4 +20,8 @@ public interface ReviewStorage {
     List<Review> getAllReviews();
 
     void changeUseful(Integer reviewId, Boolean isUsefulIncreasing);
+
+    void saveLike(Integer reviewId, Integer userId, Boolean isLike);
+
+    void deleteLike(Integer reviewId, Integer userId, Boolean isLike);
 }

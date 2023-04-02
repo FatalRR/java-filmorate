@@ -10,7 +10,7 @@ import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.ReviewMapper;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Review;
-import ru.yandex.practicum.filmorate.storage.ReviewStorage;
+import ru.yandex.practicum.filmorate.storage.review.ReviewStorage;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ReviewDbStorage implements ReviewStorage {
     @Override
     public Review save(Review review) {
         String sqlQuery = "INSERT INTO reviews (review_content, is_positive, user_id, film_id)" +
-                "values(?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
@@ -98,6 +98,18 @@ public class ReviewDbStorage implements ReviewStorage {
             sql = "UPDATE reviews SET useful = useful - 1 WHERE review_id = ?";
         }
         jdbcTemplate.update(sql, reviewId);
+    }
+
+    @Override
+    public void saveLike(Integer reviewId, Integer userId, Boolean isLike) {
+        String sql = "INSERT INTO reviews_likes (review_id, user_id, is_like) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, reviewId, userId, isLike);
+    }
+
+    @Override
+    public void deleteLike(Integer reviewId, Integer userId, Boolean isLike) {
+        String sql = "DELETE FROM reviews_likes WHERE review_id = ? AND user_id = ? AND is_like = ?";
+        jdbcTemplate.update(sql, reviewId, userId, isLike);
     }
 
     public void checkReviewExists(Integer id) {
