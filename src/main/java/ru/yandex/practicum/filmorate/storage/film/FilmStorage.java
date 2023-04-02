@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import ru.yandex.practicum.filmorate.enums.FilmSort;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
@@ -13,5 +14,17 @@ public interface FilmStorage {
 
     Film getById(Integer id);
 
-    List<Film> getPopular(Integer count);
+    void removeById(Integer id);
+
+    List<Film> getPopular(Integer count, Integer genreId, Integer year);
+
+    List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy);
+
+    List<Film> addFilm(String sqlQuery);
+
+    List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId);
+
+    List<Integer> commonFilms(final Integer userId, final Integer otherUserId);
+
+    List<Film> getCommon(Integer userId, Integer friendId);
 }
