@@ -106,16 +106,22 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
+    @Override
+    public void removeById(Integer id) {
+        String sqlQuery = "DELETE FROM films WHERE film_id = " + id;
+        jdbcTemplate.update(sqlQuery);
+    }
+
     public List<Film> getPopular(Integer count) {
-        String sqlQuery = "SELECT f.*, m.mpa_name, g.genre_id, g.genre_name, d.director_name " +
+        String sqlQuery = "SELECT f.*, m.mpa_name, GROUP_CONCAT(g.genre_id) as genre_id, GROUP_CONCAT(g.genre_name) as genre_name, d.director_id, d.director_name " +
                 "FROM films AS f " +
-                "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes " +
-                "FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
+                "LEFT JOIN (SELECT film_id, COUNT(user_id) AS film_likes FROM film_likes GROUP BY film_id) AS l ON f.film_id = l.film_id " +
                 "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                 "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
                 "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
                 "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
+                "GROUP BY f.film_id " +
                 "ORDER BY film_likes DESC " +
                 "LIMIT " + count;
 
@@ -131,12 +137,21 @@ public class FilmDbStorage implements FilmStorage {
                 Film film = filmMapper.mapRow(rs, filmId);
                 films.put(filmId, film);
             }
-            String genreName = rs.getString("genre_name");
-            if (genreName != null) {
-                films.get(filmId).addFilmGenre(Genre.builder()
-                        .id(rs.getInt("genre_id"))
-                        .name(genreName).build());
+
+            String genreIds = rs.getString("genre_id");
+            String genreNames = rs.getString("genre_name");
+            if (genreIds != null && genreNames != null) {
+                String[] genreIdArray = genreIds.split(",");
+                String[] genreNameArray = genreNames.split(",");
+                for (int i = 0; i < genreIdArray.length; i++) {
+                    int genreId = Integer.parseInt(genreIdArray[i]);
+                    String genreName = genreNameArray[i];
+                    films.get(filmId).addFilmGenre(Genre.builder()
+                            .id(genreId)
+                            .name(genreName).build());
+                }
             }
+
             String directorName = rs.getString("director_name");
             if (directorName != null) {
                 films.get(filmId).addFilmDirectors(Director.builder()
@@ -241,12 +256,12 @@ public class FilmDbStorage implements FilmStorage {
 
     public List<Integer> commonFilms(final Integer userId, final Integer otherUserId) {
         String sqlRequst = " (SELECT DISTINCT t1.film_id FROM " +
-                        "(SELECT film_id FROM film_likes " +
-                        "WHERE user_id = ?) AS t1 " +
-                        "INNER JOIN " +
-                        "(SELECT film_id  FROM film_likes " +
-                        "WHERE user_id = ?) AS t2 " +
-                        "ON  t1.film_id = t2.film_id)";
+                "(SELECT film_id FROM film_likes " +
+                "WHERE user_id = ?) AS t1 " +
+                "INNER JOIN " +
+                "(SELECT film_id  FROM film_likes " +
+                "WHERE user_id = ?) AS t2 " +
+                "ON  t1.film_id = t2.film_id)";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, otherUserId);
         List<Integer> pfilmIds = new ArrayList<>();
@@ -258,15 +273,15 @@ public class FilmDbStorage implements FilmStorage {
 
     public List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId) {
         String sqlRequst = " SELECT film_id FROM film_likes " +
-                        "WHERE film_id NOT IN " +
-                        "(SELECT t1.film_id FROM " +
-                        "(SELECT film_id  FROM film_likes " +
-                        "WHERE user_id = ?) AS t1 " +
-                        "INNER JOIN " +
-                        "(SELECT film_id  FROM film_likes " +
-                        "WHERE user_id = ?) AS t2 " +
-                        "ON  t1.film_id = t2.film_id) " +
-                        "AND user_id = ?";
+                "WHERE film_id NOT IN " +
+                "(SELECT t1.film_id FROM " +
+                "(SELECT film_id  FROM film_likes " +
+                "WHERE user_id = ?) AS t1 " +
+                "INNER JOIN " +
+                "(SELECT film_id  FROM film_likes " +
+                "WHERE user_id = ?) AS t2 " +
+                "ON  t1.film_id = t2.film_id) " +
+                "AND user_id = ?";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, mainUserId, otherUserId, otherUserId);
 
