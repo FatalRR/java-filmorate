@@ -100,4 +100,8 @@ public class FilmService {
         return searchStorage.getSearch(query, by);
     }
 
+    public List<Film> getCommon(Integer userId, Integer friendId) {
+        log.debug(String.valueOf(LogMessages.LIST_OF_COMMON_FILMS), userId, friendId);
+        return filmStorage.getCommon(userId, friendId);
+    }
 }
