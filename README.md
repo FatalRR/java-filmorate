@@ -1,6 +1,7 @@
 # java-filmorate
 
-![img.png](img.png)
+![img](https://user-images.githubusercontent.com/113539431/229414746-435203e8-aaa7-4eb6-b1cd-e94efd52ecf2.png)
+
 
 ###### Таблица film
 - ***film_id*** - уникальный идентификатор фильма
