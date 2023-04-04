@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.messages.LogMessages;
 import ru.yandex.practicum.filmorate.model.Review;
@@ -14,21 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/reviews")
 @Slf4j
 public class ReviewController {
 
     private final ReviewService reviewService;
     private final UserService userService;
-
     private final FilmService filmService;
-
-    @Autowired
-    public ReviewController(ReviewService reviewService, UserService userService, FilmService filmService) {
-        this.reviewService = reviewService;
-        this.userService = userService;
-        this.filmService = filmService;
-    }
 
     @PostMapping
     public Review save(@Valid @RequestBody Review review) {

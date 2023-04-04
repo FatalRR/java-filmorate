@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,17 +24,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
+@RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FilmMapper filmMapper;
     private final FilmWithGenreAndDirectorMapper filmWithGenreAndDirectorMapper;
-
-    @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper, FilmWithGenreAndDirectorMapper filmWithGenreAndDirectorMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.filmMapper = filmMapper;
-        this.filmWithGenreAndDirectorMapper = filmWithGenreAndDirectorMapper;
-    }
 
     @Override
     public List<Film> getAll() {

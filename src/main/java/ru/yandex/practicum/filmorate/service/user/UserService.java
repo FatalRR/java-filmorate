@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class UserService {
     private final UserStorage userStorage;
@@ -30,19 +31,6 @@ public class UserService {
     private final FilmStorage filmStorage;
     private final FeedStorage feedStorage;
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserService(UserStorage userStorage,
-                       FriendStorage friendStorage,
-                       FilmStorage filmStorage,
-                       FeedStorage feedStorage,
-                       JdbcTemplate jdbcTemplate) {
-        this.userStorage = userStorage;
-        this.friendStorage = friendStorage;
-        this.filmStorage = filmStorage;
-        this.feedStorage = feedStorage;
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     public List<User> getAll() {
         return userStorage.getAll();

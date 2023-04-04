@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,16 +17,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class ReviewDbStorage implements ReviewStorage {
 
     private final JdbcTemplate jdbcTemplate;
     private final ReviewMapper reviewMapper;
-
-    @Autowired
-    public ReviewDbStorage(JdbcTemplate jdbcTemplate, ReviewMapper reviewMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.reviewMapper = reviewMapper;
-    }
 
     @Override
     public Review save(Review review) {
