@@ -32,7 +32,11 @@ public class SearchDbStorage implements SearchStorage {
                 validateRequest(query, by) +
                 "GROUP BY g.genre_id, f.name " +
                 "ORDER BY film_likes DESC";
-        return filmStorage.addFilm(sqlQueryDirector).stream().sorted(Comparator.comparing(Film::getId).reversed()).collect(Collectors.toList());
+        return filmStorage.addFilm(sqlQueryDirector)
+                .stream()
+                .sorted(Comparator.comparing(Film::getId)
+                        .reversed())
+                .collect(Collectors.toList());
     }
 
     private String validateRequest(String query, String by) {
