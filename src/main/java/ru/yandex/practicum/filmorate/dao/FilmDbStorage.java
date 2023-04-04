@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -21,20 +21,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Repository
+@RequiredArgsConstructor
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FilmMapper filmMapper;
     private final FilmWithGenreAndDirectorMapper filmWithGenreAndDirectorMapper;
-
-    @Autowired
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, FilmMapper filmMapper, FilmWithGenreAndDirectorMapper filmWithGenreAndDirectorMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.filmMapper = filmMapper;
-        this.filmWithGenreAndDirectorMapper = filmWithGenreAndDirectorMapper;
-    }
 
     @Override
     public List<Film> getAll() {
@@ -120,24 +113,10 @@ public class FilmDbStorage implements FilmStorage {
                 "LEFT JOIN genre AS g ON fg.genre_id = g.genre_id " +
                 "LEFT JOIN film_director AS fd ON f.film_id = fd.film_id " +
                 "LEFT JOIN director AS d ON fd.director_id = d.director_id " +
+                validateRequest(genreId, year) +
                 "GROUP BY f.film_id " +
                 "ORDER BY film_likes DESC " +
                 "LIMIT " + count;
-
-        if (genreId != null && year == null) {
-            return addFilm(sqlQuery).stream()
-                    .filter(film -> film.getGenres().contains(Genre.builder().id(genreId).build()))
-                    .collect(Collectors.toList());
-        } else if (genreId == null && year != null) {
-            return addFilm(sqlQuery).stream()
-                    .filter(film -> film.getReleaseDate().getYear() == year)
-                    .collect(Collectors.toList());
-        } else if (genreId != null && year != null) {
-            return addFilm(sqlQuery).stream()
-                    .filter(film -> film.getGenres().contains(Genre.builder().id(genreId).build()))
-                    .filter(film -> film.getReleaseDate().getYear() == year)
-                    .collect(Collectors.toList());
-        }
 
         return addFilm(sqlQuery);
     }
@@ -229,9 +208,9 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
+    public List<Film> getDirectorFilm(Integer directorId, String sortBy) {
         switch (sortBy) {
-            case likes:
+            case FilmSort.LIKES:
                 String sqlLikesQuery = "SELECT * FROM films AS f " +
                         "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                         "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
@@ -247,7 +226,7 @@ public class FilmDbStorage implements FilmStorage {
                     throw new NotFoundException(String.valueOf(LogMessages.MISSING));
                 }
                 return jdbcTemplate.query(sqlLikesQuery, filmWithGenreAndDirectorMapper, directorId);
-            case year:
+            case FilmSort.YEAR:
                 String sqlYearsQuery = "SELECT * FROM films AS f " +
                         "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                         "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
@@ -321,5 +300,25 @@ public class FilmDbStorage implements FilmStorage {
         filmIds.stream().forEach(id -> films.add(getById(id)));
 
         return films;
+    }
+
+    private String validateRequest(Integer genreId, Integer year) {
+        String sqlQuery = null;
+        if (genreId != null && year == null) {
+            sqlQuery = "WHERE f.film_id IN (SELECT film_id " +
+                    "FROM film_genre " +
+                    "WHERE genre_id = " + genreId + ") ";
+        } else if (genreId == null && year != null) {
+            sqlQuery = "WHERE EXTRACT(YEAR FROM CAST(f.release_date AS date)) = " + year + " ";
+        } else if (genreId != null && year != null) {
+            sqlQuery = "WHERE f.film_id IN (SELECT film_id " +
+                    "FROM film_genre " +
+                    "WHERE genre_id = " + genreId + ") " +
+                    "AND EXTRACT(YEAR FROM CAST(f.release_date AS date)) = " + year + " ";
+        } else if (genreId == null && year == null) {
+            sqlQuery = " ";
+        }
+
+        return sqlQuery;
     }
 }

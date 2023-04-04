@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service.film;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
@@ -12,14 +12,10 @@ import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class GenreService {
     private final GenreStorage genreStorage;
-
-    @Autowired
-    public GenreService(GenreStorage genreStorage) {
-        this.genreStorage = genreStorage;
-    }
 
     public List<Genre> getAll() {
         return genreStorage.getAll();

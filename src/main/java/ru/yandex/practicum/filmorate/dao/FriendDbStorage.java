@@ -1,18 +1,14 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 
 @Repository
+@RequiredArgsConstructor
 public class FriendDbStorage implements FriendStorage {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public FriendDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public void addFriend(Integer userId, Integer friendId) {

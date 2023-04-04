@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.enums.FilmSearch;
 import ru.yandex.practicum.filmorate.excepions.ValidationException;
@@ -15,13 +15,9 @@ import java.util.stream.Collectors;
 import static ru.yandex.practicum.filmorate.messages.ExceptionMessages.INCORRECT_PAR;
 
 @Repository
+@RequiredArgsConstructor
 public class SearchDbStorage implements SearchStorage {
     private final FilmStorage filmStorage;
-
-    @Autowired
-    public SearchDbStorage(FilmStorage filmStorage) {
-        this.filmStorage = filmStorage;
-    }
 
     @Override
     public List<Film> getSearch(String query, String searchBy) {
@@ -37,7 +33,11 @@ public class SearchDbStorage implements SearchStorage {
                 validateRequest(query, searchBy) +
                 "GROUP BY g.genre_id, f.name " +
                 "ORDER BY film_likes DESC";
-        return filmStorage.addFilm(sqlQueryDirector).stream().sorted(Comparator.comparing(Film::getId).reversed()).collect(Collectors.toList());
+        return filmStorage.addFilm(sqlQueryDirector)
+                .stream()
+                .sorted(Comparator.comparing(Film::getId)
+                        .reversed())
+                .collect(Collectors.toList());
     }
 
     private String validateRequest(String query, String searchBy) {
