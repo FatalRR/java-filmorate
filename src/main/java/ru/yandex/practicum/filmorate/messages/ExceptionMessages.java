@@ -15,4 +15,5 @@ public enum ExceptionMessages {
     public static final String NOT_MPA = "Рейтинг не найден";
     public static final String NOT_FOUND_ID = "Не найден объект по ID";
     public static final String NOT_OBJECT = "Не найден объект";
+    public static final String NOT_DIRECTOR = "Не найден режиссер";
 }

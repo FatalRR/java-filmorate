@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.service.film;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.enums.EventTypes;
 import ru.yandex.practicum.filmorate.enums.FilmSort;
@@ -15,28 +15,16 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
 import ru.yandex.practicum.filmorate.storage.film.SearchStorage;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class FilmService {
-    private static final LocalDate BOUNDARY_DATE = LocalDate.of(1895, 12, 28);
     private final FilmStorage filmStorage;
     private final LikeStorage likeStorage;
     private final SearchStorage searchStorage;
     private final UserService userService;
-
-    @Autowired
-    public FilmService(FilmStorage filmStorage,
-                       LikeStorage likeStorage,
-                       SearchStorage searchStorage,
-                       UserService userService) {
-        this.filmStorage = filmStorage;
-        this.likeStorage = likeStorage;
-        this.searchStorage = searchStorage;
-        this.userService = userService;
-    }
 
     public List<Film> getAll() {
         return filmStorage.getAll();

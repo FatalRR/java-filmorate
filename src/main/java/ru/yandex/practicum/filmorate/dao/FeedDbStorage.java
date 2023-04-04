@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,15 +16,10 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
+@RequiredArgsConstructor
 public class FeedDbStorage implements FeedStorage {
     private final JdbcTemplate jdbcTemplate;
     private final FeedMapper feedMapper;
-
-    @Autowired
-    public FeedDbStorage(JdbcTemplate jdbcTemplate, FeedMapper feedMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.feedMapper = feedMapper;
-    }
 
     @Override
     public List<Event> getByUserId(Integer userId) {

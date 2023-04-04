@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.service.review;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dao.ReviewDbStorage;
 import ru.yandex.practicum.filmorate.enums.EventTypes;
@@ -12,16 +12,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReviewService {
 
     private final ReviewDbStorage storage;
     private final UserService userService;
-
-    @Autowired
-    public ReviewService(ReviewDbStorage storage, UserService userService) {
-        this.storage = storage;
-        this.userService = userService;
-    }
 
     public Review save(Review review) {
         Review addReview = storage.save(review);

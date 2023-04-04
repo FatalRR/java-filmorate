@@ -1,13 +1,14 @@
 package ru.yandex.practicum.filmorate.dao;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.mappers.DirectorMapper;
+import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
 import ru.yandex.practicum.filmorate.model.Director;
 import ru.yandex.practicum.filmorate.storage.film.DirectorStorage;
 
@@ -15,16 +16,11 @@ import java.sql.PreparedStatement;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 @Slf4j
 public class DirectorDbStorage implements DirectorStorage {
     private final JdbcTemplate jdbcTemplate;
     private final DirectorMapper directorMapper;
-
-    @Autowired
-    public DirectorDbStorage(JdbcTemplate jdbcTemplate, DirectorMapper directorMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.directorMapper = directorMapper;
-    }
 
     @Override
     public List<Director> getAll() {
@@ -57,9 +53,8 @@ public class DirectorDbStorage implements DirectorStorage {
     public Director update(Director director) {
         String sqlQuery = "UPDATE director SET director_name = ? WHERE director_id = ?";
         if (jdbcTemplate.update(sqlQuery, director.getName(), director.getId()) == 0) {
-            String message = "Режиссер " + director + " не найден.";
-            log.debug(message);
-            throw new NotFoundException(message);
+            log.debug(String.valueOf(ExceptionMessages.NOT_DIRECTOR), director.getId());
+            throw new NotFoundException(String.valueOf(ExceptionMessages.NOT_DIRECTOR));
         }
         return director;
     }

@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.mappers.GenreMapper;
@@ -10,15 +10,10 @@ import ru.yandex.practicum.filmorate.storage.film.GenreStorage;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreMapper genreMapper;
-
-    @Autowired
-    public GenreDbStorage(JdbcTemplate jdbcTemplate, GenreMapper genreMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.genreMapper = genreMapper;
-    }
 
     @Override
     public List<Genre> getAll() {
