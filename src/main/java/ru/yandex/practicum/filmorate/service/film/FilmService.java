@@ -86,8 +86,8 @@ public class FilmService {
         return filmStorage.getDirectorFilm(directorId, sortBy);
     }
 
-    public List<Film> getSearch(String query, String by) {
-        return searchStorage.getSearch(query, by);
+    public List<Film> getSearch(String query, String searchBy) {
+        return searchStorage.getSearch(query, searchBy);
     }
 
     public List<Film> getCommon(Integer userId, Integer friendId) {

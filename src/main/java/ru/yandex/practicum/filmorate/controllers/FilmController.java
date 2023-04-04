@@ -79,9 +79,9 @@ public class FilmController {
     }
 
     @GetMapping("/search")
-    public List<Film> searchFilms(@RequestParam String query, @RequestParam String by) {
-        log.debug(String.valueOf(LogMessages.TRY_GET_SEARCH), query, by);
-        return filmService.getSearch(query, by);
+    public List<Film> searchFilms(@RequestParam String query, @RequestParam (value = "by") String searchBy) {
+        log.debug(String.valueOf(LogMessages.TRY_GET_SEARCH), query, searchBy);
+        return filmService.getSearch(query, searchBy);
     }
 
     @GetMapping("/common")
