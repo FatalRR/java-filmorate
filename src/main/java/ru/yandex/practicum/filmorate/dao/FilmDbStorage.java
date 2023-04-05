@@ -267,15 +267,13 @@ public class FilmDbStorage implements FilmStorage {
     private String validateRequest(Integer genreId, Integer year) {
         String sqlQuery = null;
         if (genreId != null && year == null) {
-            sqlQuery = "WHERE f.film_id IN (SELECT film_id " +
-                    "FROM film_genre " +
-                    "WHERE genre_id = " + genreId + ") ";
+            sqlQuery = "LEFT JOIN (SELECT film_id FROM film_genre WHERE genre_id = " + genreId + ") AS wh ON f.film_id = wh.film_id " +
+                    "WHERE f.film_id = wh.film_id ";
         } else if (genreId == null && year != null) {
             sqlQuery = "WHERE EXTRACT(YEAR FROM CAST(f.release_date AS date)) = " + year + " ";
         } else if (genreId != null && year != null) {
-            sqlQuery = "WHERE f.film_id IN (SELECT film_id " +
-                    "FROM film_genre " +
-                    "WHERE genre_id = " + genreId + ") " +
+            sqlQuery = "LEFT JOIN (SELECT film_id FROM film_genre WHERE genre_id = " + genreId + ") AS wh ON f.film_id = wh.film_id " +
+                    "WHERE f.film_id = wh.film_id " +
                     "AND EXTRACT(YEAR FROM CAST(f.release_date AS date)) = " + year + " ";
         } else if (genreId == null && year == null) {
             sqlQuery = " ";
