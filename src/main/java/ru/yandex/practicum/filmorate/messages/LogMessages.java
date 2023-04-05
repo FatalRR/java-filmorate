@@ -35,7 +35,9 @@ public enum LogMessages {
     REVIEW_DISLIKE_CANCEL("Пользователь с id: {} удалил дизлайк у отзыва с id: {}"),
     TRY_GET_COMMON_FILMS("Попытка получить список общих просмотренных фильмов для пользователей с id: {} и id: {}"),
     LIST_OF_COMMON_FILMS("Предоставлен список общих просмотренных фильмов для пользователей с id: {} и id: {}"),
-    TRY_GET_EVENT_FEED("Попытка получения ленты событий с пользователем id: {}");
+    TRY_GET_EVENT_FEED("Попытка получения ленты событий с пользователем id: {}"),
+    LIKE("лайк"),
+    DISLIKE("дизлайк");
 
     private final String textLog;
 

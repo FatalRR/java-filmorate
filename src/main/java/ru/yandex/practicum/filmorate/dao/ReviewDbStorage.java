@@ -107,7 +107,7 @@ public class ReviewDbStorage implements ReviewStorage {
         jdbcTemplate.update(sql, reviewId, userId, isLike);
     }
 
-    public void checkReviewExists(Integer id) {
+    private void checkReviewExists(Integer id) {
         String sql = "SELECT * FROM reviews WHERE review_id = ?";
         SqlRowSet reviewRows = jdbcTemplate.queryForRowSet(sql, id);
         if (!reviewRows.next()) {

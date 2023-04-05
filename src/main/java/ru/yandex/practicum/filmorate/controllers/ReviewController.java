@@ -20,22 +20,16 @@ import java.util.Optional;
 public class ReviewController {
 
     private final ReviewService reviewService;
-    private final UserService userService;
-    private final FilmService filmService;
 
     @PostMapping
     public Review save(@Valid @RequestBody Review review) {
         log.debug(String.valueOf(LogMessages.TRY_ADD), review);
-        userService.getById(review.getUserId());
-        filmService.getById(review.getFilmId());
         return reviewService.save(review);
     }
 
     @PutMapping
     public Review update(@Valid @RequestBody Review review) {
         log.debug(String.valueOf(LogMessages.TRY_UPDATE), review);
-        userService.getById(review.getUserId());
-        filmService.getById(review.getFilmId());
         return reviewService.update(review);
     }
 
@@ -54,16 +48,13 @@ public class ReviewController {
     @GetMapping
     public List<Review> getFilmReviews(@RequestParam Optional<Integer> filmId,
                                        @RequestParam(defaultValue = "10") Integer count) {
-        filmId.ifPresent(filmService::getById);
         log.debug(String.valueOf(LogMessages.COUNT), reviewService.getFilmReviews(filmId, count).size());
         return reviewService.getFilmReviews(filmId, count);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addLikeToReview(@PathVariable Integer id, @PathVariable Integer userId) {
-        log.debug(String.valueOf(LogMessages.TRY_ADD), "лайк");
-        userService.getById(userId);
-        reviewService.getById(id);
+        log.debug(String.valueOf(LogMessages.TRY_ADD), LogMessages.LIKE);
         reviewService.saveLike(id, userId, true);
         reviewService.changeUseful(id, true);
         log.debug(String.valueOf(LogMessages.REVIEW_LIKE_DONE), userId, id);
@@ -71,9 +62,7 @@ public class ReviewController {
 
     @PutMapping("/{id}/dislike/{userId}")
     public void addDislikeToReview(@PathVariable Integer id, @PathVariable Integer userId) {
-        log.debug(String.valueOf(LogMessages.TRY_ADD), "дизлайк");
-        userService.getById(userId);
-        reviewService.getById(id);
+        log.debug(String.valueOf(LogMessages.TRY_ADD), LogMessages.DISLIKE);
         reviewService.saveLike(id, userId, false);
         reviewService.changeUseful(id, false);
         log.debug(String.valueOf(LogMessages.REVIEW_DISLIKE_DONE), userId, id);
@@ -81,8 +70,7 @@ public class ReviewController {
 
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLikeFromReview(@PathVariable Integer id, @PathVariable Integer userId) {
-        log.debug(String.valueOf(LogMessages.TRY_DELETE), "лайк");
-        userService.getById(userId);
+        log.debug(String.valueOf(LogMessages.TRY_DELETE), LogMessages.LIKE);
         reviewService.deleteLike(id, userId, true);
         reviewService.changeUseful(id, false);
         log.debug(String.valueOf(LogMessages.REVIEW_LIKE_CANCEL), userId, id);
@@ -90,9 +78,7 @@ public class ReviewController {
 
     @DeleteMapping("/{id}/dislike/{userId}")
     public void deleteDislikeFromReview(@PathVariable Integer id, @PathVariable Integer userId) {
-        log.debug(String.valueOf(LogMessages.TRY_DELETE), "дизлайк");
-        userService.getById(userId);
-        userService.getById(userId);
+        log.debug(String.valueOf(LogMessages.TRY_DELETE), LogMessages.DISLIKE);
         reviewService.deleteLike(id, userId, false);
         reviewService.changeUseful(id, true);
         log.debug(String.valueOf(LogMessages.REVIEW_DISLIKE_CANCEL), userId, id);

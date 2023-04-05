@@ -11,9 +11,9 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class IsAfterValidator implements ConstraintValidator<IsAfter, LocalDate> {
 
-    public String value;
+    private String value;
 
-    public DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Override
     public void initialize(IsAfter constraintAnnotation) {

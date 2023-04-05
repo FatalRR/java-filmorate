@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 public class ReplaceNoNameWithLoginValidator implements ConstraintValidator<ReplaceNoNameWithLogin, User> {
     @Override
     public boolean isValid(User user, ConstraintValidatorContext constraintValidatorContext) {
-        if (user.getName() == null || "".equals(user.getName())) {
+        if (user.getName() == null || user.getName().isEmpty()) {
             user.setName(user.getLogin());
             log.debug(ValidationExceptionMessages.LOGIN_TO_NAME.toString());
         }
