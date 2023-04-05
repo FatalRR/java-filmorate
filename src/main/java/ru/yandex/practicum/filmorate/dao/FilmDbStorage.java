@@ -282,17 +282,13 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     public List<Film> getCommon(Integer userId, Integer friendId) {
-        String sqlRequst = "SELECT f.film_id from film_likes AS f " +
-                "WHERE f.film_id IN " +
-                "(SELECT t1.film_id FROM " +
-                "(SELECT film_id FROM film_likes " +
-                "WHERE user_id = ?) AS t1 " +
-                "INNER JOIN " +
-                "(SELECT film_id  FROM film_likes " +
-                "WHERE user_id = ?) AS t2 " +
-                "ON  t1.film_id = t2.film_id) " +
-                "GROUP BY f.film_id " +
-                "ORDER BY count(*) DESC";
+        String sqlRequst = "SELECT t2.film_id " +
+                "FROM film_likes t1, film_likes t2 " +
+                "WHERE t1.film_id = t2.film_id AND t1.user_id != t2.user_id " +
+                "AND t1.user_id = ? " +
+                "AND t2.user_id = ? " +
+                "GROUP BY t2.film_id " +
+                "ORDER BY count(t2.film_id) DESC";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, friendId);
 
