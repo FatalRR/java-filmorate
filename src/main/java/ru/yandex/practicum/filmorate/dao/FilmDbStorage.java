@@ -247,40 +247,6 @@ public class FilmDbStorage implements FilmStorage {
         }
     }
 
-    public List<Integer> commonFilms(final Integer userId, final Integer otherUserId) {
-        String sqlRequst = " (SELECT DISTINCT t1.film_id FROM " +
-                "(SELECT film_id FROM film_likes " +
-                "WHERE user_id = ?) AS t1 " +
-                "INNER JOIN " +
-                "(SELECT film_id  FROM film_likes " +
-                "WHERE user_id = ?) AS t2 " +
-                "ON  t1.film_id = t2.film_id)";
-
-        List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, otherUserId);
-        List<Integer> pfilmIds = new ArrayList<>();
-        filmIds.forEach((pfilmIds::add));
-
-        return pfilmIds;
-    }
-
-
-    public List<Integer> differentFilms(final Integer mainUserId, final Integer otherUserId) {
-        String sqlRequst = " SELECT film_id FROM film_likes " +
-                "WHERE film_id NOT IN " +
-                "(SELECT t1.film_id FROM " +
-                "(SELECT film_id  FROM film_likes " +
-                "WHERE user_id = ?) AS t1 " +
-                "INNER JOIN " +
-                "(SELECT film_id  FROM film_likes " +
-                "WHERE user_id = ?) AS t2 " +
-                "ON  t1.film_id = t2.film_id) " +
-                "AND user_id = ?";
-
-        List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, mainUserId, otherUserId, otherUserId);
-
-        return filmIds;
-    }
-
     public List<Film> getCommon(Integer userId, Integer friendId) {
         String sqlRequst = "SELECT t2.film_id " +
                 "FROM film_likes t1, film_likes t2 " +
@@ -317,4 +283,28 @@ public class FilmDbStorage implements FilmStorage {
 
         return sqlQuery;
     }
+
+    public List<Film> recommendations(Integer userId) {
+        String sqlRequst = "SELECT t3.film_id " +
+                "FROM film_likes t3 " +
+                "WHERE t3.user_id IN (SELECT t2.user_id " +
+                "FROM film_likes t1, film_likes t2 " +
+                "WHERE t1.film_id = t2.film_id " +
+                "AND t1.user_id != t2.user_id " +
+                "AND t1.user_id = ? " +
+                "GROUP BY t2.user_id " +
+                "ORDER BY count(t2.film_id) DESC) " +
+                "AND t3.film_id NOT IN (" +
+                "SELECT t4.film_id " +
+                "FROM film_likes t4 " +
+                "WHERE t4.user_id = ?)";
+
+        List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, userId);
+        List<Film> films = new ArrayList<>();
+        filmIds.forEach(id -> films.add(getById(id)));
+
+        return films;
+    }
+
+
 }

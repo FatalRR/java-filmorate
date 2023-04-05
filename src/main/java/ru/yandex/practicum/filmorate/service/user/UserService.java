@@ -91,26 +91,8 @@ public class UserService {
     }
 
     public List<Film> recommendations(Integer userId) {
-        String sqlRequst = " SELECT user_id FROM film_likes ";
-        List<Integer> userIds = jdbcTemplate.queryForList(sqlRequst, Integer.class);
-
-        Integer idMaxNumFilms = 0;
-        int maxNumFilms = 0;
-
-        for (Integer usrId : userIds) {
-            if (!userId.equals(usrId)) {
-                if (filmStorage.commonFilms(userId, usrId).size() > maxNumFilms) {
-                    maxNumFilms = filmStorage.commonFilms(userId, usrId).size();
-                    idMaxNumFilms = usrId;
-                }
-            }
-        }
-
-        List<Film> films = new ArrayList<>();
-        filmStorage.differentFilms(userId, idMaxNumFilms).forEach(id -> films.add(filmStorage.getById(id)));
         log.info(String.valueOf(LogMessages.LIST_OF_RECOMMENDATIONS), userId);
-
-        return films;
+        return filmStorage.recommendations(userId);
     }
 
     public List<Event> getByUserId(Integer userId) {
@@ -120,4 +102,5 @@ public class UserService {
     public Event addEvent(Integer userId, EventTypes eventTypes, OperationTypes operationTypes, Integer entityId) {
         return feedStorage.addEvent(userId, eventTypes, operationTypes, entityId);
     }
+
 }
