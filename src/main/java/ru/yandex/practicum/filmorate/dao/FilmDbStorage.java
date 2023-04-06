@@ -21,6 +21,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.IntStream;
 
 @Repository
 @RequiredArgsConstructor
@@ -136,13 +137,14 @@ public class FilmDbStorage implements FilmStorage {
             if (genreIds != null && genreNames != null) {
                 String[] genreIdArray = genreIds.split(",");
                 String[] genreNameArray = genreNames.split(",");
-                for (int i = 0; i < genreIdArray.length; i++) {
-                    int genreId = Integer.parseInt(genreIdArray[i]);
-                    String genreName = genreNameArray[i];
-                    films.get(filmId).addFilmGenre(Genre.builder()
-                            .id(genreId)
-                            .name(genreName).build());
-                }
+                IntStream.range(0, genreIdArray.length)
+                        .forEach(i -> {
+                            int genreId = Integer.parseInt(genreIdArray[i]);
+                            String genreName = genreNameArray[i];
+                            films.get(filmId).addFilmGenre(Genre.builder()
+                                    .id(genreId)
+                                    .name(genreName).build());
+                        });
             }
 
             String directorName = rs.getString("director_name");
