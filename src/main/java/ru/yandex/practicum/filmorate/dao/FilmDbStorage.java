@@ -21,6 +21,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -291,17 +292,15 @@ public class FilmDbStorage implements FilmStorage {
                 "AND t1.user_id != t2.user_id " +
                 "AND t1.user_id = ? " +
                 "GROUP BY t2.user_id " +
-                "ORDER BY count(t2.film_id) DESC) " +
+                "ORDER BY count(t2.film_id) DESC " +
+                "LIMIT 1) " +
                 "AND t3.film_id NOT IN (" +
                 "SELECT t4.film_id " +
                 "FROM film_likes t4 " +
                 "WHERE t4.user_id = ?)";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, userId);
-        List<Film> films = new ArrayList<>();
-        filmIds.forEach(id -> films.add(getById(id)));
-
-        return films;
+        return filmIds.stream().map(id -> getById(id)).collect(Collectors.toList());
     }
 
 
