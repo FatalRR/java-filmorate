@@ -197,7 +197,6 @@ public class FilmDbStorage implements FilmStorage {
         });
     }
 
-
     @Override
     public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
         switch (sortBy) {
@@ -294,6 +293,4 @@ public class FilmDbStorage implements FilmStorage {
 
         return films;
     }
-
-
 }
