@@ -199,9 +199,9 @@ public class FilmDbStorage implements FilmStorage {
 
 
     @Override
-    public List<Film> getDirectorFilm(Integer directorId, String sortBy) {
+    public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
         switch (sortBy) {
-            case FilmSort.LIKES:
+            case likes:
                 String sqlLikesQuery = "SELECT * FROM films AS f " +
                         "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                         "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +
@@ -217,7 +217,7 @@ public class FilmDbStorage implements FilmStorage {
                     throw new NotFoundException(String.valueOf(LogMessages.MISSING));
                 }
                 return jdbcTemplate.query(sqlLikesQuery, filmWithGenreAndDirectorMapper, directorId);
-            case FilmSort.YEAR:
+            case year:
                 String sqlYearsQuery = "SELECT * FROM films AS f " +
                         "LEFT JOIN mpa AS m ON f.mpa_id = m.mpa_id " +
                         "LEFT JOIN film_genre AS fg ON f.film_id = fg.film_id " +

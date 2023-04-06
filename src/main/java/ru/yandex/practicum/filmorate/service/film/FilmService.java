@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.enums.EventTypes;
+import ru.yandex.practicum.filmorate.enums.FilmSort;
 import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
@@ -69,7 +70,7 @@ public class FilmService {
         return filmStorage.getPopular(count, genreId, year);
     }
 
-    public List<Film> getDirectorFilm(Integer directorId, String sortBy) {
+    public List<Film> getDirectorFilm(Integer directorId, FilmSort sortBy) {
         return filmStorage.getDirectorFilm(directorId, sortBy);
     }
 
