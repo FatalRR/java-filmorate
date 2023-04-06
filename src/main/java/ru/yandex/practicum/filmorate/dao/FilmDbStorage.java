@@ -160,25 +160,19 @@ public class FilmDbStorage implements FilmStorage {
     private void addGenre(Film film) {
         Integer filmId = film.getId();
         jdbcTemplate.update("DELETE FROM film_genre WHERE film_id = ?", filmId);
-        Set<Genre> genresSet = film.getGenres();
+        List<Genre> genresList = new ArrayList<>(film.getGenres());
         String addGenresQuery = "MERGE INTO film_genre (film_id, genre_id) " +
                 "VALUES (?,?)";
         jdbcTemplate.batchUpdate(addGenresQuery, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setInt(1, filmId);
-                Iterator<Genre> genresIterator = genresSet.iterator();
-                for (int j = 0; j <= i && genresIterator.hasNext(); j++) {
-                    Genre genre = genresIterator.next();
-                    if (j == i) {
-                        ps.setInt(2, genre.getId());
-                    }
-                }
+                ps.setInt(2, genresList.get(i).getId());
             }
 
             @Override
             public int getBatchSize() {
-                return genresSet.size();
+                return genresList.size();
             }
         });
     }
@@ -186,28 +180,23 @@ public class FilmDbStorage implements FilmStorage {
     private void addDirector(Film film) {
         Integer filmId = film.getId();
         jdbcTemplate.update("DELETE FROM film_director WHERE film_id = ?", filmId);
-        Set<Director> directorSet = film.getDirectors();
+        List<Director> directorList = new ArrayList<>(film.getDirectors());
         String addDirectorsQuery = "MERGE INTO film_director (film_id, director_id) " +
                 "VALUES (?,?)";
         jdbcTemplate.batchUpdate(addDirectorsQuery, new BatchPreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps, int i) throws SQLException {
                 ps.setInt(1, filmId);
-                Iterator<Director> directorIterator = directorSet.iterator();
-                for (int j = 0; j <= i && directorIterator.hasNext(); j++) {
-                    Director director = directorIterator.next();
-                    if (j == i) {
-                        ps.setInt(2, director.getId());
-                    }
-                }
+                ps.setInt(2, directorList.get(i).getId());
             }
 
             @Override
             public int getBatchSize() {
-                return directorSet.size();
+                return directorList.size();
             }
         });
     }
+
 
     @Override
     public List<Film> getDirectorFilm(Integer directorId, String sortBy) {
