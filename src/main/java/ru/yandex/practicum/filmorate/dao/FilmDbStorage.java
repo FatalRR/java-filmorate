@@ -21,6 +21,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -257,11 +258,7 @@ public class FilmDbStorage implements FilmStorage {
                 "ORDER BY count(t2.film_id) DESC";
 
         List<Integer> filmIds = jdbcTemplate.queryForList(sqlRequst, Integer.class, userId, friendId);
-
-        List<Film> films = new ArrayList<>();
-        filmIds.stream().forEach(id -> films.add(getById(id)));
-
-        return films;
+        return filmIds.stream().map(id -> getById(id)).collect(Collectors.toList());
     }
 
     private String validateRequest(Integer genreId, Integer year) {
