@@ -1,14 +1,20 @@
 package ru.yandex.practicum.filmorate.service.user;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.enums.EventTypes;
+import ru.yandex.practicum.filmorate.enums.OperationTypes;
 import ru.yandex.practicum.filmorate.excepions.NotFoundException;
-import ru.yandex.practicum.filmorate.excepions.ValidationException;
 import ru.yandex.practicum.filmorate.messages.ExceptionMessages;
-import ru.yandex.practicum.filmorate.messages.ValidationExceptionMessages;
+import ru.yandex.practicum.filmorate.messages.LogMessages;
+import ru.yandex.practicum.filmorate.model.Event;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.FeedStorage;
 import ru.yandex.practicum.filmorate.storage.user.FriendStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -16,28 +22,24 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class UserService {
     private final UserStorage userStorage;
     private final FriendStorage friendStorage;
-
-    @Autowired
-    public UserService(UserStorage userStorage, FriendStorage friendStorage) {
-        this.userStorage = userStorage;
-        this.friendStorage = friendStorage;
-    }
+    private final FilmStorage filmStorage;
+    private final FeedStorage feedStorage;
+    private final JdbcTemplate jdbcTemplate;
 
     public List<User> getAll() {
         return userStorage.getAll();
     }
 
     public User save(User user) {
-        validate(user);
         return userStorage.save(user);
     }
 
     public User update(User user) {
-        validate(user);
         if (Objects.equals(getById(user.getId()).getId(), user.getId())) {
             return userStorage.update(user);
         } else {
@@ -53,12 +55,21 @@ public class UserService {
         }
     }
 
+    public void removeById(Integer id) {
+        try {
+            userStorage.removeById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
+        }
+    }
+
     public void addFriend(Integer id, Integer friendId) {
         try {
             friendStorage.addFriend(id, friendId);
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
+        addEvent(id, EventTypes.FRIEND, OperationTypes.ADD, friendId);
     }
 
     public void removeFriend(Integer id, Integer friendId) {
@@ -67,6 +78,7 @@ public class UserService {
         } catch (Exception e) {
             throw new NotFoundException(ExceptionMessages.NOT_FOUND_ID);
         }
+        addEvent(id, EventTypes.FRIEND, OperationTypes.REMOVE, friendId);
     }
 
     public List<User> getFriends(Integer id) {
@@ -77,10 +89,17 @@ public class UserService {
         return userStorage.getCorporateFriends(id, otherId);
     }
 
-    public void validate(User user) throws ValidationException {
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.info(ValidationExceptionMessages.LOGIN_TO_NAME.toString());
-            user.setName(user.getLogin());
-        }
+    public List<Film> recommendations(Integer userId) {
+        log.info(String.valueOf(LogMessages.LIST_OF_RECOMMENDATIONS), userId);
+        return filmStorage.recommendations(userId);
     }
+
+    public List<Event> getByUserId(Integer userId) {
+        return feedStorage.getByUserId(userId);
+    }
+
+    public Event addEvent(Integer userId, EventTypes eventTypes, OperationTypes operationTypes, Integer entityId) {
+        return feedStorage.addEvent(userId, eventTypes, operationTypes, entityId);
+    }
+
 }

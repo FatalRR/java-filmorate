@@ -1,18 +1,14 @@
 package ru.yandex.practicum.filmorate.dao;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.storage.film.LikeStorage;
 
 @Repository
+@RequiredArgsConstructor
 public class LikeDbStorage implements LikeStorage {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public LikeDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public void addLike(Integer filmId, Integer userId) {
@@ -20,6 +16,7 @@ public class LikeDbStorage implements LikeStorage {
                 "VALUES (?, ?)";
         jdbcTemplate.update(sqlQuery, filmId, userId);
     }
+
     @Override
     public void removeLike(Integer filmId, Integer userId) {
         String sqlQuery = "DELETE FROM film_likes " +

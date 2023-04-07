@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @Builder
-public class Mpa extends Entity {
+public class Director extends Entity {
     private Integer id;
     @NotBlank
     private String name;
